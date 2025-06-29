@@ -7,9 +7,9 @@ public class GunController : MonoBehaviour
     public GameObject bulletPrefab;     // 총알 프리팹
     public GameObject player;          // 플레이어 오브젝트
     public Transform firePoint;         // 총알 발사 위치
-    public float fireRate = 0.25f;      // 발사 간격
-    private float nextFireTime = 0f; // 총알 발사 딜레이
-    bool isCharging = false;
+    public float fireRate;      // 발사 간격
+    private float nextFireTime; // 총알 발사 딜레이
+    bool isCharging;
 
 
     public int maxHP;        // 최대 체력 (= 장전 가능한 총알 한도)
@@ -29,6 +29,10 @@ public class GunController : MonoBehaviour
 
     void Start()
     {
+        fireRate = 0.25f; // 총알 발사 간격 설정
+        nextFireTime = 0f; // 초기화
+        isCharging = false;
+
         currentAmmo = currentHP; // 현재 체력을 현재 탄창으로   
 
         isReloading = false;

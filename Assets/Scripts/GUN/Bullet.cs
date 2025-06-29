@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float speed = 300f;
-    public float lifetime = 2f;
+    public float speed;
+    public float lifetime;
     private Vector2 moveDirection;
+    private Rigidbody2D rb;
 
     public void SetDirection(Vector2 dir)
     {
@@ -15,11 +16,27 @@ public class Bullet : MonoBehaviour
 
     void Start()
     {
+        speed = 100f; // 총알 속도 설정
+        lifetime = 2f; // 총알 유지 시간 설정
+
+        rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.linearVelocity = moveDirection * speed;  // velocity를 사용하여 총알 이동
+        }
         Destroy(gameObject, lifetime); // 총알이 2초 후 자동 파괴
     }
 
-    void Update()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        transform.Translate(moveDirection * speed * Time.deltaTime, Space.World); //space.World을 사용하여 월드 좌표계에서 이동(아니면 방향이 안맞음.)
+        if (collision.gameObject.tag == "Enemy")  // 총알과 적의 충돌 감지
+        {
+            Debug.Log("적에게 데미지를 줌");
+            Destroy(this.gameObject);
+        }
+        //if (collision.gameObject.tag != "Player")
+        //{
+        //    Debug.Log("총알이 " + collision.gameObject.name + "에 충돌함");
+        //}
     }
 }

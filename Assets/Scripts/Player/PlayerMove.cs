@@ -20,7 +20,7 @@ public class PlayerMove : MonoBehaviour
     private float jumpTimeCounter = 0f;
 
     /*─────대시기능 구현 필드────────*/
-    [SerializeField] private float dashSpeed = 15f;
+    [SerializeField] private float dashSpeed = 30f;
     [SerializeField] private float dashTime = 0.2f; // 대시하는 시간
     [SerializeField] private float dashCooldown = 0.5f; // 대시 쿨타임
     private bool isDashing = false;
@@ -35,6 +35,7 @@ public class PlayerMove : MonoBehaviour
         anim = GetComponent<Animator>();
         rb.linearDamping = 0f;  // 감속 없음
         rb.gravityScale = 2f;
+        dashSpeed = 30f;
         // sr = GetComponent<SpriteRenderer>();
         // anim = GetComponent<Animator>();
     }
