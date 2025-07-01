@@ -8,6 +8,10 @@ public class Bullet : MonoBehaviour
     public float lifetime;
     private Vector2 moveDirection;
     private Rigidbody2D rb;
+    // public Bullet()
+    // {
+
+    // }
 
     public void SetDirection(Vector2 dir)
     {
@@ -16,7 +20,7 @@ public class Bullet : MonoBehaviour
 
     void Start()
     {
-        speed = 100f; // 총알 속도 설정
+        speed = 110f; // 총알 속도 설정
         lifetime = 2f; // 총알 유지 시간 설정
 
         rb = GetComponent<Rigidbody2D>();
@@ -34,9 +38,6 @@ public class Bullet : MonoBehaviour
             Debug.Log("적에게 데미지를 줌");
             Destroy(this.gameObject);
         }
-        //if (collision.gameObject.tag != "Player")
-        //{
-        //    Debug.Log("총알이 " + collision.gameObject.name + "에 충돌함");
-        //}
     }
 }
+/**/

@@ -28,6 +28,8 @@ public class PlayerMove : MonoBehaviour
     private float lastDashTime = -999f; // Time.time과 함께 쿨다운 체크용
     /*────────────────────────────*/
 
+    private bool isKnockback = false; // 넉백 상태 플래그
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -43,6 +45,8 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isKnockback) return; //넉백중이면 이동X
+
         HandleMovement();
         HandleJump();
     }
@@ -53,7 +57,7 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown)
         {
             isDashing = true;
-            Debug.Log("isDashing이 true입니다.");
+            //Debug.Log("isDashing이 true입니다.");
             anim.SetBool("isDashing", true);
             dashTimer = dashTime;
             lastDashTime = Time.time;
@@ -72,7 +76,7 @@ public class PlayerMove : MonoBehaviour
             if (dashTimer <= 0)
             {
                 isDashing = false;
-                Debug.Log("isDashing이 false입니다.");
+                //Debug.Log("isDashing이 false입니다.");
                 anim.SetBool("isDashing", false);
                 rb.gravityScale = 2f;
             }
@@ -114,6 +118,21 @@ public class PlayerMove : MonoBehaviour
         return Physics2D.OverlapCircle(checkPosition, checkRadius, groundLayer);// 착지판정기준 좌표에서 radius만큼 주변에 GroundLayer가 있는가?
     }
 
+    // 땅에 닿으면 넉백 상태 해제
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground")) // 바닥만 인식
+        {
+            isKnockback = false;
+        }
+    }
 
+    // 외부에서 넉백 시작할 때 호출
+    public void ApplyKnockback(Vector2 force)
+    {
+        isKnockback = true;
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(force, ForceMode2D.Impulse);
+    }
 
 }

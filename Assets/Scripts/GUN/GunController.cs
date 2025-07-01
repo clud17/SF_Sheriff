@@ -2,6 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Bullet bulletPop()
+// {
+
+// }
+// void bulletPop()
+// {
+    
+// }
+
 public class GunController : MonoBehaviour
 {
     public GameObject bulletPrefab;     // 총알 프리팹
@@ -17,7 +26,7 @@ public class GunController : MonoBehaviour
     public int currentAmmo;  // 현재 탄약
     public bool isReloading; // 재장전 중인지 아닌지
     public float AmmoreloadTime; // 재장전시간
-    
+
     private bool isRKeyHeld; // R키가 눌려진 상태인지 확인하는 변수(왜냐하면 R키를 누르는 동안 총알 발사 막기위해)
     private float rKeyHoldTime; // R키를 누른 시간
     private float firstHealTime; // 회복 시작 시간 (R키를 누르고 2초가 지나면 회복 시작)
@@ -26,6 +35,8 @@ public class GunController : MonoBehaviour
     private bool firstHealDone; // 첫 번째 회복이 완료되었는지 확인하는 플래그
     private bool isHealing; // 회복 중인지 확인하는 플래그
 
+    public Bullet[] bulletQueue = new Bullet[6];
+    int bulletRear, bulletFront;
 
     void Start()
     {
@@ -157,20 +168,26 @@ public class GunController : MonoBehaviour
         yield return new WaitForSeconds(0.2f); // 0.2초 대기
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - firePoint.position).normalized;
-        float playerScale = transform.localScale.x;  // 캐릭터의 크기를 동적으로 받음
 
         // 회전 각도 계산
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
 
+        // 총알 생성 및 방향 설정
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, rotation);
         bullet.GetComponent<Bullet>().SetDirection(direction);
+
+        //플레이어 넉백
+        float lookDirection = direction.x > 0 ? -2f : 2f;                       // x가 플레이어 오른쪽(왼쪽)이면 왼쪽(오른쪽)방향으로 넉백
+        Vector2 knockbackDir = new Vector2(lookDirection, 1f).normalized;     // 넉백 방향 설정 (x축은 왼쪽/오른쪽, y축은 위쪽으로 설정)
 
         // 현재 캐릭터의 rigidbody2D를 가져옴
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.AddForce(-direction * playerScale * 0.5f, ForceMode2D.Impulse);
+            Vector2 knockbackForce = knockbackDir * 8f;                         // 넉백 벡터 설정(방향+힘)
+
+            player.GetComponent<PlayerMove>().ApplyKnockback(knockbackForce);   // 플레이어 이동 스크립트에 넉백 적용 함수 호출
         }
         isCharging = false; // 다시 발사 가능해짐
     }
