@@ -12,7 +12,7 @@ public class PlayerMove : MonoBehaviour
     //isJumping 확인용 필드
     [SerializeField] private LayerMask groundLayer; 
     
-    private BoxCollider2D col;
+    private Collider2D col;
     private Rigidbody2D rb;
     private Animator anim;
 
@@ -33,7 +33,7 @@ public class PlayerMove : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        col = GetComponent<BoxCollider2D>();
+        col = GetComponent<Collider2D>();
         anim = GetComponent<Animator>();
         rb.linearDamping = 0f;  // 감속 없음
         rb.gravityScale = 2f;
@@ -115,6 +115,9 @@ public class PlayerMove : MonoBehaviour
         float offsetY = -(col.bounds.extents.y + 0.5f); // 오프셋 = 캐릭터 길이 절반 + 여유
         float checkRadius = 0.1f;
         Vector2 checkPosition = (Vector2)transform.position + new Vector2(0f, offsetY); // 착지판정기준 = 캐릭터 중심 + 오프셋 = 캐릭터 발끝 + 여유
+        LayerMask groundLayer = LayerMask.GetMask("Ground");
+        // Collider2D hit = Physics2D.OverlapCircle(checkPosition, checkRadius, groundLayer);
+        // Debug.Log(hit);
         return Physics2D.OverlapCircle(checkPosition, checkRadius, groundLayer);// 착지판정기준 좌표에서 radius만큼 주변에 GroundLayer가 있는가?
     }
 
@@ -132,7 +135,7 @@ public class PlayerMove : MonoBehaviour
     {
         isKnockback = true;
         rb.linearVelocity = Vector2.zero;
-        rb.AddForce(force, ForceMode2D.Impulse);
+        rb.AddForce(force, ForceMode2D.Impulse);       // 넉백 구현
     }
 
 }

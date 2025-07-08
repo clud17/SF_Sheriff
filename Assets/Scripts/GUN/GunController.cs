@@ -1,32 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Bullet bulletPop()
-// {
-
-// }
-// void bulletPop()
-// {
-    
-// }
 
 public class GunController : MonoBehaviour
 {
-    public GameObject bulletPrefab;     // 총알 프리팹
     public GameObject player;          // 플레이어 오브젝트
     public Transform firePoint;         // 총알 발사 위치
     public float fireRate;      // 발사 간격
     private float nextFireTime; // 총알 발사 딜레이
     bool isCharging;
-
-
-    public int maxHP;        // 최대 체력 (= 장전 가능한 총알 한도)
-    public int currentHP;    // 현재 체력 (피격 시 감소)   // 여기 나중에 수정 필요할듯? hardcoding되어있음. 다른 곳에서 받아와야 하나?
-    public int currentAmmo;  // 현재 탄약
+    //HP 관리 필드
+    public int maxHP;// 최대 체력
+    public int currentHP;    // 현재 체력 (피격 시 감소)
+    public int currentAmmo;  // 현재 남은 탄약의 갯수
+    //
     public bool isReloading; // 재장전 중인지 아닌지
     public float AmmoreloadTime; // 재장전시간
-
     private bool isRKeyHeld; // R키가 눌려진 상태인지 확인하는 변수(왜냐하면 R키를 누르는 동안 총알 발사 막기위해)
     private float rKeyHoldTime; // R키를 누른 시간
     private float firstHealTime; // 회복 시작 시간 (R키를 누르고 2초가 지나면 회복 시작)
@@ -35,9 +26,10 @@ public class GunController : MonoBehaviour
     private bool firstHealDone; // 첫 번째 회복이 완료되었는지 확인하는 플래그
     private bool isHealing; // 회복 중인지 확인하는 플래그
 
-    public Bullet[] bulletQueue = new Bullet[6];
-    int bulletRear, bulletFront;
+    public GameObject[] bulletPrefabs;
+    private GameObject ChargeBulletObj;
 
+    BulletBase[] myBullets = new BulletBase[7];
     void Start()
     {
         fireRate = 0.25f; // 총알 발사 간격 설정
@@ -56,6 +48,19 @@ public class GunController : MonoBehaviour
         extraHealTimer = 0f;
         firstHealDone = false;
         isHealing = false;
+
+        // 기본 탄환의 종류를 지정하는 배열. 0: 기본, 1: charge(바꿔야함 우클릭에만 적용되게), 2: 관통 등등. 나중에 휴식을 할 때, 바꿀수 있어야함
+        int[] startBullet = { 1,3,1,3,3,1 }; // ABCDEF.
+        for (int i = 6; i >= 1; i--) // 기본 탄환 6개.
+        {
+            //총알 프리팹을 미리 만들어 두고, 클래스만 인큐해 넣는다.
+            GameObject bulletObj = Instantiate(bulletPrefabs[startBullet[i - 1]]);
+            BulletBase bullet = bulletObj.GetComponent<BulletBase>();
+            myBullets[7-i] = bullet;
+           //myBullets[i] = bullet;
+        }
+        // 위 코드를 실행한 이후 myBullets 배열은 { ,F,E,D,C,B,A}가 된다.
+        ChargeBulletObj = Instantiate(bulletPrefabs[0]);
     }
 
 
@@ -119,31 +124,29 @@ public class GunController : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(0) && Time.time >= nextFireTime && !isRKeyHeld)
-        {
-            if (currentAmmo <= 0)
+        { //좌클릭 코드 구현
+            if (currentAmmo==0) //탄약이 없으면
             {
                 Debug.Log("need to reload");  // 탄약이 없을 때
             }
-            else
+            else // 탄약이 있으면
             {
-                Fire();
-
+                Fire(); // 발사
                 Debug.Log($"{currentAmmo}");
-                currentAmmo--; // 발사 시 탄약 감소
                 nextFireTime = Time.time + fireRate;  // 발사 주기를 관리하기 위해
 
             }
         }
         if (Input.GetMouseButtonDown(1) && !isRKeyHeld)
         {
-            if (currentAmmo <= 0)
+            if (currentAmmo==0)
             {
                 Debug.Log("need to reload");  // 탄약이 없을 때
             }
             else
             {
                 StartCoroutine(DelayedShoot());
-                currentAmmo = 0;
+                
                 // 여기에 특수한 능력이 있어야 하나?
                 Debug.Log($"{currentAmmo}");
                 StartCoroutine(ReloadAmmo());  // 우클릭시 남은 총알 관계없이 재장전
@@ -157,6 +160,7 @@ public class GunController : MonoBehaviour
         Debug.Log("장전중..");
         yield return new WaitForSeconds(AmmoreloadTime);
         Debug.Log("장전 완료");
+
         currentAmmo = currentHP; // 현재 체력을 현재 탄창으로
         isReloading = false;
     }
@@ -165,7 +169,7 @@ public class GunController : MonoBehaviour
     {
         if (isCharging || isReloading) yield break; // 이미 실행 중이면 무시
         isCharging = true;
-        yield return new WaitForSeconds(0.2f); // 0.2초 대기
+        yield return new WaitForSeconds(0.3f); // 0.3초 대기  //차지샷 딜레이시간
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - firePoint.position).normalized;
 
@@ -173,13 +177,17 @@ public class GunController : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
 
-        // 총알 생성 및 방향 설정
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, rotation);
-        bullet.GetComponent<Bullet>().SetDirection(direction);
-
+        // (수정 필)나중에 우클릭을 누르면 검은색 탄환(chargeBullet prefabs)이 나가게 해야함. 
+        ChargeBulletObj.SetActive(true);                                                    //1. 오브젝트 다시 활성화
+        ChargeBulletObj.GetComponent<BulletBase>().transform.position = firePoint.position; // 2. 발사 위치
+        ChargeBulletObj.GetComponent<BulletBase>().SetDirection(direction);                 // 3. 방향 설정
+        ChargeBulletObj.GetComponent<BulletBase>().transform.rotation = rotation;           //4.회전 설정
+        ChargeBulletObj.GetComponent<BulletBase>().bulletDamage = currentAmmo * currentAmmo;
+        Debug.Log(currentAmmo + "개를 발사합니다");
+        ChargeBulletObj.GetComponent<BulletBase>().Fire();                                  //5. 발사
+        currentAmmo = 0;
         //플레이어 넉백
-        float lookDirection = direction.x > 0 ? -2f : 2f;                       // x가 플레이어 오른쪽(왼쪽)이면 왼쪽(오른쪽)방향으로 넉백
-        Vector2 knockbackDir = new Vector2(lookDirection, 1f).normalized;     // 넉백 방향 설정 (x축은 왼쪽/오른쪽, y축은 위쪽으로 설정)
+        Vector2 knockbackDir = new Vector2(-direction.x, -direction.y).normalized;     // 넉백 방향 설정 (x축은 왼쪽/오른쪽, y축은 위쪽으로 설정)
 
         // 현재 캐릭터의 rigidbody2D를 가져옴
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
@@ -193,16 +201,21 @@ public class GunController : MonoBehaviour
     }
 
     void Fire()
-    {
+    { // 발사 코드
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - firePoint.position).normalized;
-
         // 회전 각도 계산
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
-
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, rotation);
-        bullet.GetComponent<Bullet>().SetDirection(direction);
+        //Debug.Log(currentAmmo + "이므로 " + myBullets[currentAmmo].bulletName + "이 발사됩니다.");
+        Debug.Log(currentAmmo);
+        BulletBase now = myBullets[currentAmmo--];
+        Debug.Log(now);
+        now.gameObject.SetActive(true);                         // 오브젝트 다시 활성화
+        now.transform.position = firePoint.position;            // 발사 위치
+        now.SetDirection(direction);                            // 방향 설정
+        now.transform.rotation = rotation;                      // 회전 설정
+        now.Fire();                                             // 발사
     }
     void Heal(int amount)
     {

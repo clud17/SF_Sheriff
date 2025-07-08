@@ -5,7 +5,7 @@ using System;
 
 public class PlayerHealthManager : MonoBehaviour
 {
-    public GunController guncontrol; // guncontrol을 사용하기 위해 추가
+    public baseGun guncontrol; // guncontrol을 사용하기 위해 추가
 
     public Image[] bullets; // 총알 UI 연결
 
@@ -16,9 +16,11 @@ public class PlayerHealthManager : MonoBehaviour
 
     void Start()
     {
-        guncontrol.maxHP = 6; // 최대 체력 설정(일단 hardcording)
-        guncontrol.currentHP = guncontrol.maxHP; //현재 체력을 최대 체력으로 초기화
-        UpdateBullets();
+        for (int i = 0; i < bullets.Length; i++)
+        {
+            bullets[i].sprite = fullBulletSprite;
+        }
+        //UpdateBullets();
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
@@ -26,16 +28,16 @@ public class PlayerHealthManager : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        guncontrol.currentHP -= 1;
-        Debug.Log($"현재 체력 : {guncontrol.currentHP}");
-        Debug.Log($"현재 총알 : {guncontrol.currentAmmo}");
+        guncontrol.gundata.currentHP -= 1;
+        Debug.Log($"현재 체력 : {guncontrol.gundata.currentHP}");
+        Debug.Log($"현재 총알 : {guncontrol.gundata.currentAmmo}");
         UpdateBullets();
         CheckDeath(); // ✅ 여기서 체력 검사
     }
 
     private void UpdateBullets()
     {
-        int bulletsToShow = Mathf.CeilToInt((float)Mathf.Clamp(guncontrol.currentHP, 0, guncontrol.maxHP));
+        int bulletsToShow = Mathf.CeilToInt((float)Mathf.Clamp(guncontrol.gundata.currentHP, 0, guncontrol.gundata.maxHP));
 
         for (int i = 0; i < bullets.Length; i++)
         {
@@ -46,7 +48,7 @@ public class PlayerHealthManager : MonoBehaviour
     private void CheckDeath()
     {
         // ❗ 변경된 부분: 체력이 0보다 "작을 때" 죽음 처리
-        if (guncontrol.currentHP < 0)
+        if (guncontrol.gundata.currentHP < 1)
         {
             Debug.Log("Player Died");
 
