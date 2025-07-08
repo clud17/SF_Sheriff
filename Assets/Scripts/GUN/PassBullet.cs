@@ -16,23 +16,18 @@ public class PassBullet : BulletBase
         speed      = 110f;
         lifetime   = 2f;
     }
-    public override void Fire() // 부모 Fire를 상속받은 Fire 메소드
+    public override void Hitscan() // 히트스캔 메소드
     {
-        base.Fire();
+        base.Hitscan();
+
+
+    }
+    public override void Projectile() // 투사체 메소드
+    {
+        base.Projectile();
         if (rb != null)
         {
             rb.linearVelocity = moveDirection * speed;  // velocity를 사용하여 총알 이동
-        }
-
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //OnTriggerEnter2D는 일반적인 오버라이딩 규칙을 따르지 않는다.
-        //자식 클래스에서 OnTriggerEnter2D를 구현하면 그 코드만 따르고, 아예 구현하지 않으면 밑 코드를 따른다.
-        //기본 코드
-        if (collision.gameObject.tag == "Enemy")  // 총알과 적의 충돌 감지
-        {
-            Debug.Log("적에게 데미지를 줌");
         }
     }
 }
