@@ -16,7 +16,7 @@ public abstract class BulletBase : MonoBehaviour
     protected Vector2 moveDirection;//방향
     protected Rigidbody2D rb;
 
-    private bool shootingmode;   // ture: projectile, false: hitscan
+    public int gunmode; // 총 모드 (0: hitscan, 1: projectile)
 
     private Coroutine returnRoutine;
 
@@ -24,13 +24,18 @@ public abstract class BulletBase : MonoBehaviour
     {
         moveDirection = dir.normalized;
     }
-    public virtual void Hitscan()
+    public virtual void Hitscan(RaycastHit2D hitinfo)
     {
-        shootingmode = false;
+        gunmode = 0;
+
+        if (hitinfo.collider != null && hitinfo.collider.CompareTag("Enemy"))  // ray가 맞았을 때, 적 tag가 enemy면 데미지 줌
+        {
+            Debug.Log("적에게 데미지를 줌(히트스캔)");
+        }
     }
     public virtual void Projectile()
     {
-        shootingmode = true;
+        gunmode = 1;
         // 총알 발사시 공통적으로 실행되어야 하는 코드들. 자식 클래스에서 base.Fire()로 쓸 수 있음
         rb = GetComponent<Rigidbody2D>();
         //Debug.Log("현재 발사된 총알의 이름은 " + bulletName);
@@ -40,12 +45,11 @@ public abstract class BulletBase : MonoBehaviour
     {
         //OnTriggerEnter2D는 일반적인 오버라이딩 규칙을 따르지 않는다.
         //자식 클래스에서 OnTriggerEnter2D를 구현하면 그 코드만 따르고, 아예 구현하지 않으면 밑 코드를 따른다.
-        //기본 코드
-        if(shootingmode == true)
+        if(gunmode == 1) // 투사체 모드일 때만 충돌 감지
         {
             if (collision.gameObject.tag == "Enemy")  // 총알과 적의 충돌 감지
             {
-                Debug.Log("적에게 데미지를 줌");
+                Debug.Log("적에게 데미지를 줌(투사체)");
                 if (bulletName != "관통탄")
                 {
                     Deactivate();

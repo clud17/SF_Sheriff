@@ -16,6 +16,7 @@ public struct Data
     public int currentHP;    // 현재 체력 (피격 시 감소)
     public int currentAmmo;  // 현재 남은 탄약의 갯수
 
+    public int gunmode; // 총 (0:히트스캔, 1:투사체)
 }
 
 
@@ -30,8 +31,6 @@ public abstract class baseGun : MonoBehaviour
         gundata.maxHP = 6; // 최대 체력
         gundata.currentHP = gundata.maxHP; // 현재 체력을 최대 체력으로 초기화
         gundata.currentAmmo = gundata.currentHP; // 현재 탄약을 현재 체력으로 초기화
-        
-
     }
 
     public abstract void Fire(GameObject player, Transform tip);

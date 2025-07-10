@@ -36,7 +36,7 @@ public class PlayerMove : MonoBehaviour
         col = GetComponent<Collider2D>();
         anim = GetComponent<Animator>();
         rb.linearDamping = 0f;  // 감속 없음
-        rb.gravityScale = 1.5f;
+        rb.gravityScale = 2.0f;
         dashSpeed = 30f;
         // sr = GetComponent<SpriteRenderer>();
         // anim = GetComponent<Animator>();

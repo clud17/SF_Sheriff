@@ -6,7 +6,6 @@ using System;
 public class PlayerHealthManager : MonoBehaviour
 {
     public baseGun guncontrol; // guncontrol을 사용하기 위해 추가
-
     public Image[] bullets; // 총알 UI 연결
 
     public Sprite fullBulletSprite;   // 체력 있는 총알 이미지
@@ -16,6 +15,7 @@ public class PlayerHealthManager : MonoBehaviour
 
     void Start()
     {
+        guncontrol = GetComponent<baseGun>();     // ? 총마다 다르게(히트스캔 or 투사체) inspector 창에 player를 불러오려면 어떻게 해야할까?이게 맞나?
         for (int i = 0; i < bullets.Length; i++)
         {
             bullets[i].sprite = fullBulletSprite;
@@ -25,7 +25,6 @@ public class PlayerHealthManager : MonoBehaviour
         if (gameOverPanel != null)
             gameOverPanel.SetActive(false);
     }
-
     public void TakeDamage(int damage)
     {
         guncontrol.gundata.currentHP -= 1;

@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI.Table;
-public class DefaultGun : baseGun
+public class HitScanGun : baseGun
 {
+    //float maxDistance = 10f; // 히트스캔 최대 사거리 설정
+
     //public BulletBase
     public override void InitSetting()
     {
@@ -12,25 +14,18 @@ public class DefaultGun : baseGun
         gundata.fireRate = 0.25f; // 발사 간격 설정
         gundata.nextFireTime = 0f; // 초기화
         gundata.AmmoreloadTime = 1.5f; // 재장전 시간 설정
-        
+
     }
     public override void Fire(GameObject player, Transform tip)
     {
         // 총알 발사 메소드
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - tip.position).normalized;
-        // 회전 각도 계산
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion rotation = Quaternion.Euler(0, 0, angle);
-        //Debug.Log(currentAmmo + "이므로 " + myBullets[currentAmmo].bulletName + "이 발사됩니다.");
-        Debug.Log(gundata.currentAmmo);
+
+        RaycastHit2D hit = Physics2D.Raycast(tip.position, direction, 10f, LayerMask.GetMask("Enemy"));    // 히트스캔을 위한 레이캐스트 총구(tip), 방향, 최대거리(10f), layerMask(enemy) 설정
+
         BulletBase now = WC.myBullets[gundata.currentAmmo--];
-        Debug.Log(now);
-        now.gameObject.SetActive(true);
-        now.transform.position = tip.position;            // 발사 위치
-        now.SetDirection(direction);                            // 방향 설정
-        now.transform.rotation = rotation;                      // 회전 설정
-        now.Projectile();
+        now.Hitscan(hit);
     }
     public override IEnumerator DelayedShoot(GameObject player, Transform tip)
     {
@@ -40,18 +35,11 @@ public class DefaultGun : baseGun
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - tip.position).normalized;
 
-        // 회전 각도 계산
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion rotation = Quaternion.Euler(0, 0, angle);
+        RaycastHit2D hit = Physics2D.Raycast(tip.position, direction, 10f, LayerMask.GetMask("Enemy"));    // 히트스캔을 위한 레이캐스트 총구(tip), 방향, 최대거리(10f), layerMask(enemy) 설정
 
         //총알 발사
-        BulletBase now = WC.myBullets[gundata.currentAmmo];
-        Debug.Log(now);
-        now.gameObject.SetActive(true);                         // 오브젝트 다시 활성화
-        now.transform.position = tip.position;            // 발사 위치
-        now.SetDirection(direction);                            // 방향 설정
-        now.transform.rotation = rotation;                      // 회전 설정
-        now.Projectile();
+        BulletBase now = WC.myBullets[0];
+        now.Hitscan(hit);
 
         gundata.currentAmmo = 0; // 차지샷을 사용했으므로 현재 탄약을 0으로 설정
 

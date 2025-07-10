@@ -17,7 +17,7 @@ public class WeaponController : MonoBehaviour
     void Start()
     {
         // 기본 탄환의 종류를 지정하는 배열. 0: 기본, 1: charge(바꿔야함 우클릭에만 적용되게), 2: 관통 등등. 나중에 휴식을 할 때, 바꿀수 있어야함
-        int[] startBullet = { 1, 3, 1, 3, 3, 1 }; // ABCDEF.
+        int[] startBullet = { 1, 3, 1, 3, 3, 1 }; // ABCDEF.      //(수정 필 : 나중에 업데이트 할 수 있게 gundata에 넣는다??)
         for (int i = 6; i >= 1; i--) // 기본 탄환 6개.
         {
             //총알 프리팹을 미리 만들어 두고, 클래스만 인큐해 넣는다.
@@ -28,7 +28,7 @@ public class WeaponController : MonoBehaviour
         }
         // 위 코드를 실행한 이후 myBullets 배열은 { ,F,E,D,C,B,A}가 된다
         ChargeBulletObj = Instantiate(bulletPrefabs[0]); // bulletPrefabs[0] 
-
+        myBullets[0] = ChargeBulletObj.GetComponent<BulletBase>();
         currentGun.InitSetting(); // 총 초기화 설정
     }
 
@@ -36,7 +36,7 @@ public class WeaponController : MonoBehaviour
     void Update()
     {
         if (currentGun.gundata.isReloading) return; // 재장전 중이면 아무것도 하지 않음
-
+        
         if (Input.GetMouseButtonDown(0) && Time.time >= currentGun.gundata.nextFireTime)
         { //좌클릭 코드 구현
             if (currentGun.gundata.currentAmmo == 0) Debug.Log("need to reload"); //현재탄환 큐가 비어있으면
@@ -44,9 +44,7 @@ public class WeaponController : MonoBehaviour
             {
                 currentGun.Fire(player, tip); // 발사
                 Debug.Log($"{currentGun.gundata.currentAmmo}");
-                currentGun.gundata.nextFireTime = Time.time + currentGun.gundata.fireRate;  // �߻� �ֱ⸦ �����ϱ� ����
-
-
+                currentGun.gundata.nextFireTime = Time.time + currentGun.gundata.fireRate;  // 발사 주기를 관리하기 위해
             }
         }
         if (Input.GetMouseButtonDown(1))
