@@ -6,30 +6,30 @@ using UnityEngine;
 
 public struct Data
 {
-    public float fireRate;      // ¹ß»ç °£°İ
-    public float nextFireTime; // ÃÑ¾Ë ¹ß»ç µô·¹ÀÌ
+    public float fireRate;      // ë°œì‚¬ ê°„ê²©
+    public float nextFireTime; // ì´ì•Œ ë°œì‚¬ ë”œë ˆì´
     public bool isCharging;
-    public bool isReloading; // ÀçÀåÀü ÁßÀÎÁö ¾Æ´ÑÁö
-    public float AmmoreloadTime; // ÀçÀåÀü½Ã°£
-    //HP °ü¸® ÇÊµå
-    public int maxHP;// ÃÖ´ë Ã¼·Â
-    public int currentHP;    // ÇöÀç Ã¼·Â (ÇÇ°İ ½Ã °¨¼Ò)
-    public int currentAmmo;  // ÇöÀç ³²Àº Åº¾àÀÇ °¹¼ö
+    public bool isReloading; // ì¬ì¥ì „ ì¤‘ì¸ì§€ ì•„ë‹Œì§€
+    public float AmmoreloadTime; // ì¬ì¥ì „ì‹œê°„
+    //HP ê´€ë¦¬ í•„ë“œ
+    public int maxHP;// ìµœëŒ€ ì²´ë ¥
+    public int currentHP;    // í˜„ì¬ ì²´ë ¥ (í”¼ê²© ì‹œ ê°ì†Œ)
+    public int currentAmmo;  // í˜„ì¬ ë‚¨ì€ íƒ„ì•½ì˜ ê°¯ìˆ˜
 
 }
 
 
 public abstract class baseGun : MonoBehaviour
 {
-    public Data gundata; // ÃÑÀÇ µ¥ÀÌÅÍ ±¸Á¶Ã¼
+    public Data gundata; // ì´ì˜ ë°ì´í„° êµ¬ì¡°ì²´
     public WeaponController WC;
     public virtual void InitSetting()
     {
         gundata.isCharging = false;
-        gundata.isReloading = false; // ÀçÀåÀü ÁßÀÎÁö ¾Æ´ÑÁö
-        gundata.maxHP = 6; // ÃÖ´ë Ã¼·Â
-        gundata.currentHP = gundata.maxHP; // ÇöÀç Ã¼·ÂÀ» ÃÖ´ë Ã¼·ÂÀ¸·Î ÃÊ±âÈ­
-        gundata.currentAmmo = gundata.currentHP; // ÇöÀç Åº¾àÀ» ÇöÀç Ã¼·ÂÀ¸·Î ÃÊ±âÈ­
+        gundata.isReloading = false; // ì¬ì¥ì „ ì¤‘ì¸ì§€ ì•„ë‹Œì§€
+        gundata.maxHP = 6; // ìµœëŒ€ ì²´ë ¥
+        gundata.currentHP = gundata.maxHP; // í˜„ì¬ ì²´ë ¥ì„ ìµœëŒ€ ì²´ë ¥ìœ¼ë¡œ ì´ˆê¸°í™”
+        gundata.currentAmmo = gundata.currentHP; // í˜„ì¬ íƒ„ì•½ì„ í˜„ì¬ ì²´ë ¥ìœ¼ë¡œ ì´ˆê¸°í™”
         
 
     }
@@ -39,11 +39,11 @@ public abstract class baseGun : MonoBehaviour
     public virtual IEnumerator ReloadAmmo()
     {
         gundata.isReloading = true;
-        Debug.Log("ÀåÀüÁß..");
+        Debug.Log("ì¥ì „ì¤‘..");
         yield return new WaitForSeconds(gundata.AmmoreloadTime);
-        Debug.Log("ÀåÀü ¿Ï·á");
+        Debug.Log("ì¥ì „ ì™„ë£Œ");
 
-        gundata.currentAmmo = gundata.currentHP; // ÇöÀç Ã¼·ÂÀ» ÇöÀç ÅºÃ¢À¸·Î
+        gundata.currentAmmo = gundata.currentHP; // í˜„ì¬ ì²´ë ¥ì„ í˜„ì¬ íƒ„ì°½ìœ¼ë¡œ
 
         gundata.isReloading = false;
     }

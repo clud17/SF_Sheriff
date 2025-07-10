@@ -8,65 +8,65 @@ public class DefaultGun : baseGun
     //public BulletBase
     public override void InitSetting()
     {
-        base.InitSetting(); // ºÎ¸ğ Å¬·¡½ºÀÇ InitSetting È£Ãâ
-        gundata.fireRate = 0.25f; // ¹ß»ç °£°İ ¼³Á¤
-        gundata.nextFireTime = 0f; // ÃÊ±âÈ­
-        gundata.AmmoreloadTime = 1.5f; // ÀçÀåÀü ½Ã°£ ¼³Á¤
+        base.InitSetting(); // ë¶€ëª¨ í´ë˜ìŠ¤ì˜ InitSetting í˜¸ì¶œ
+        gundata.fireRate = 0.25f; // ë°œì‚¬ ê°„ê²© ì„¤ì •
+        gundata.nextFireTime = 0f; // ì´ˆê¸°í™”
+        gundata.AmmoreloadTime = 1.5f; // ì¬ì¥ì „ ì‹œê°„ ì„¤ì •
         
     }
     public override void Fire(GameObject player, Transform tip)
     {
-        // ÃÑ¾Ë ¹ß»ç ¸Ş¼Òµå
+        // ì´ì•Œ ë°œì‚¬ ë©”ì†Œë“œ
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - tip.position).normalized;
-        // È¸Àü °¢µµ °è»ê
+        // íšŒì „ ê°ë„ ê³„ì‚°
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
-        //Debug.Log(currentAmmo + "ÀÌ¹Ç·Î " + myBullets[currentAmmo].bulletName + "ÀÌ ¹ß»çµË´Ï´Ù.");
+        //Debug.Log(currentAmmo + "ì´ë¯€ë¡œ " + myBullets[currentAmmo].bulletName + "ì´ ë°œì‚¬ë©ë‹ˆë‹¤.");
         Debug.Log(gundata.currentAmmo);
         BulletBase now = WC.myBullets[gundata.currentAmmo--];
         Debug.Log(now);
         now.gameObject.SetActive(true);
-        now.transform.position = tip.position;            // ¹ß»ç À§Ä¡
-        now.SetDirection(direction);                            // ¹æÇâ ¼³Á¤
-        now.transform.rotation = rotation;                      // È¸Àü ¼³Á¤
+        now.transform.position = tip.position;            // ë°œì‚¬ ìœ„ì¹˜
+        now.SetDirection(direction);                            // ë°©í–¥ ì„¤ì •
+        now.transform.rotation = rotation;                      // íšŒì „ ì„¤ì •
         now.Projectile();
     }
     public override IEnumerator DelayedShoot(GameObject player, Transform tip)
     {
-        if (gundata.isCharging || gundata.isReloading) yield break; // ÀÌ¹Ì ½ÇÇà ÁßÀÌ¸é ¹«½Ã
+        if (gundata.isCharging || gundata.isReloading) yield break; // ì´ë¯¸ ì‹¤í–‰ ì¤‘ì´ë©´ ë¬´ì‹œ
         gundata.isCharging = true;
-        yield return new WaitForSeconds(0.3f); // 0.3ÃÊ ´ë±â  //Â÷Áö¼¦ µô·¹ÀÌ½Ã°£
+        yield return new WaitForSeconds(0.3f); // 0.3ì´ˆ ëŒ€ê¸°  //ì°¨ì§€ìƒ· ë”œë ˆì´ì‹œê°„
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - tip.position).normalized;
 
-        // È¸Àü °¢µµ °è»ê
+        // íšŒì „ ê°ë„ ê³„ì‚°
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
 
-        //ÃÑ¾Ë ¹ß»ç
+        //ì´ì•Œ ë°œì‚¬
         BulletBase now = WC.myBullets[gundata.currentAmmo];
         Debug.Log(now);
-        now.gameObject.SetActive(true);                         // ¿ÀºêÁ§Æ® ´Ù½Ã È°¼ºÈ­
-        now.transform.position = tip.position;            // ¹ß»ç À§Ä¡
-        now.SetDirection(direction);                            // ¹æÇâ ¼³Á¤
-        now.transform.rotation = rotation;                      // È¸Àü ¼³Á¤
+        now.gameObject.SetActive(true);                         // ì˜¤ë¸Œì íŠ¸ ë‹¤ì‹œ í™œì„±í™”
+        now.transform.position = tip.position;            // ë°œì‚¬ ìœ„ì¹˜
+        now.SetDirection(direction);                            // ë°©í–¥ ì„¤ì •
+        now.transform.rotation = rotation;                      // íšŒì „ ì„¤ì •
         now.Projectile();
 
-        gundata.currentAmmo = 0; // Â÷Áö¼¦À» »ç¿ëÇßÀ¸¹Ç·Î ÇöÀç Åº¾àÀ» 0À¸·Î ¼³Á¤
+        gundata.currentAmmo = 0; // ì°¨ì§€ìƒ·ì„ ì‚¬ìš©í–ˆìœ¼ë¯€ë¡œ í˜„ì¬ íƒ„ì•½ì„ 0ìœ¼ë¡œ ì„¤ì •
 
-        //ÇÃ·¹ÀÌ¾î ³Ë¹é
-        Vector2 knockbackDir = new Vector2(-direction.x, -direction.y).normalized;     // ³Ë¹é ¹æÇâ ¼³Á¤ (xÃàÀº ¿ŞÂÊ/¿À¸¥ÂÊ, yÃàÀº À§ÂÊÀ¸·Î ¼³Á¤)
+        //í”Œë ˆì´ì–´ ë„‰ë°±
+        Vector2 knockbackDir = new Vector2(-direction.x, -direction.y).normalized;     // ë„‰ë°± ë°©í–¥ ì„¤ì • (xì¶•ì€ ì™¼ìª½/ì˜¤ë¥¸ìª½, yì¶•ì€ ìœ„ìª½ìœ¼ë¡œ ì„¤ì •)
 
-        // ÇöÀç Ä³¸¯ÅÍÀÇ rigidbody2D¸¦ °¡Á®¿È
+        // í˜„ì¬ ìºë¦­í„°ì˜ rigidbody2Dë¥¼ ê°€ì ¸ì˜´
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            Vector2 knockbackForce = knockbackDir * 8f;                         // ³Ë¹é º¤ÅÍ ¼³Á¤(¹æÇâ+Èû)
+            Vector2 knockbackForce = knockbackDir * 8f;                         // ë„‰ë°± ë²¡í„° ì„¤ì •(ë°©í–¥+í˜)
 
-            player.GetComponent<PlayerMove>().ApplyKnockback(knockbackForce);   // ÇÃ·¹ÀÌ¾î ÀÌµ¿ ½ºÅ©¸³Æ®¿¡ ³Ë¹é Àû¿ë ÇÔ¼ö È£Ãâ
+            player.GetComponent<PlayerMove>().ApplyKnockback(knockbackForce);   // í”Œë ˆì´ì–´ ì´ë™ ìŠ¤í¬ë¦½íŠ¸ì— ë„‰ë°± ì ìš© í•¨ìˆ˜ í˜¸ì¶œ
         }
-        gundata.isCharging = false; // ´Ù½Ã ¹ß»ç °¡´ÉÇØÁü
+        gundata.isCharging = false; // ë‹¤ì‹œ ë°œì‚¬ ê°€ëŠ¥í•´ì§
     }
     public override IEnumerator ReloadAmmo()
     {

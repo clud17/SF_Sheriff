@@ -6,8 +6,8 @@ public class PlayerMove : MonoBehaviour
     //캐릭터의 좌우,점프,대시 등의 전반적인 움직임을 구현하는 코드
 
     [SerializeField] private float moveSpeed = 5f; // 이속
-    [SerializeField] private float jumpSpeed = 5f; // 점프높이
-    [SerializeField] private float maxJumpTime = 0.4f; // 최대점프시간
+    [SerializeField] private float jumpSpeed = 15f; // 점프높이
+    [SerializeField] private float maxJumpTime = 0.5f; // 최대점프시간
 
     //isJumping 확인용 필드
     [SerializeField] private LayerMask groundLayer; 
@@ -36,7 +36,7 @@ public class PlayerMove : MonoBehaviour
         col = GetComponent<Collider2D>();
         anim = GetComponent<Animator>();
         rb.linearDamping = 0f;  // 감속 없음
-        rb.gravityScale = 2f;
+        rb.gravityScale = 1.5f;
         dashSpeed = 30f;
         // sr = GetComponent<SpriteRenderer>();
         // anim = GetComponent<Animator>();
@@ -106,20 +106,24 @@ public class PlayerMove : MonoBehaviour
         }
         else if (Input.GetKeyUp(KeyCode.Space)) // 스페이스에서 키를 떼면
         {
+            if (rb.linearVelocity.y > 0)
+            {
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+            }
             isJumping = false;
         }
     }
     
     private bool IsGrounded()
     {
-        float offsetY = -(col.bounds.extents.y + 0.5f); // 오프셋 = 캐릭터 길이 절반 + 여유
-        float checkRadius = 0.1f;
-        Vector2 checkPosition = (Vector2)transform.position + new Vector2(0f, offsetY); // 착지판정기준 = 캐릭터 중심 + 오프셋 = 캐릭터 발끝 + 여유
+        float offsetY = -(col.bounds.extents.y + 0.1f); // 발끝에서 살짝 아래
+        Vector2 boxSize = new Vector2(col.bounds.size.x, 0.2f); // 캐릭터 너비의 90%, 높이는 얇게
+        Vector2 checkPosition = (Vector2)transform.position + new Vector2(0f, offsetY);
         LayerMask groundLayer = LayerMask.GetMask("Ground");
-        // Collider2D hit = Physics2D.OverlapCircle(checkPosition, checkRadius, groundLayer);
-        // Debug.Log(hit);
-        return Physics2D.OverlapCircle(checkPosition, checkRadius, groundLayer);// 착지판정기준 좌표에서 radius만큼 주변에 GroundLayer가 있는가?
+
+        return Physics2D.OverlapBox(checkPosition, boxSize, 0f, groundLayer);
     }
+
 
     // 땅에 닿으면 넉백 상태 해제
     void OnCollisionEnter2D(Collision2D collision)

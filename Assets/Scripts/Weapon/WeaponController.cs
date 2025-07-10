@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
-    public baseGun currentGun; // ÇöÀç ÀåÂøµÈ ÃÑ
-    public GameObject player; // ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ®
-    public Transform tip; // ÃÑ¾Ë ¹ß»ç À§Ä¡
+    public baseGun currentGun; // í˜„ì¬ ì¥ì°©ëœ ì´
+    public GameObject player; // í”Œë ˆì´ì–´ ì˜¤ë¸Œì íŠ¸
+    public Transform tip; // ì´ì•Œ ë°œì‚¬ ìœ„ì¹˜
 
     public BulletBase[] myBullets = new BulletBase[7];
     public GameObject[] bulletPrefabs;
@@ -16,52 +16,53 @@ public class WeaponController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // ±âº» ÅºÈ¯ÀÇ Á¾·ù¸¦ ÁöÁ¤ÇÏ´Â ¹è¿­. 0: ±âº», 1: charge(¹Ù²ã¾ßÇÔ ¿ìÅ¬¸¯¿¡¸¸ Àû¿ëµÇ°Ô), 2: °üÅë µîµî. ³ªÁß¿¡ ÈŞ½ÄÀ» ÇÒ ¶§, ¹Ù²Ü¼ö ÀÖ¾î¾ßÇÔ
+        // ê¸°ë³¸ íƒ„í™˜ì˜ ì¢…ë¥˜ë¥¼ ì§€ì •í•˜ëŠ” ë°°ì—´. 0: ê¸°ë³¸, 1: charge(ë°”ê¿”ì•¼í•¨ ìš°í´ë¦­ì—ë§Œ ì ìš©ë˜ê²Œ), 2: ê´€í†µ ë“±ë“±. ë‚˜ì¤‘ì— íœ´ì‹ì„ í•  ë•Œ, ë°”ê¿€ìˆ˜ ìˆì–´ì•¼í•¨
         int[] startBullet = { 1, 3, 1, 3, 3, 1 }; // ABCDEF.
-        for (int i = 6; i >= 1; i--) // ±âº» ÅºÈ¯ 6°³.
+        for (int i = 6; i >= 1; i--) // ê¸°ë³¸ íƒ„í™˜ 6ê°œ.
         {
-            //ÃÑ¾Ë ÇÁ¸®ÆÕÀ» ¹Ì¸® ¸¸µé¾î µÎ°í, Å¬·¡½º¸¸ ÀÎÅ¥ÇØ ³Ö´Â´Ù.
+            //ì´ì•Œ í”„ë¦¬íŒ¹ì„ ë¯¸ë¦¬ ë§Œë“¤ì–´ ë‘ê³ , í´ë˜ìŠ¤ë§Œ ì¸íí•´ ë„£ëŠ”ë‹¤.
             GameObject bulletObj = Instantiate(bulletPrefabs[startBullet[i - 1]]);
             BulletBase bullet = bulletObj.GetComponent<BulletBase>();
             myBullets[7 - i] = bullet;
             //myBullets[i] = bullet;
         }
-        // À§ ÄÚµå¸¦ ½ÇÇàÇÑ ÀÌÈÄ myBullets ¹è¿­Àº { ,F,E,D,C,B,A}°¡ µÈ´Ù
+        // ìœ„ ì½”ë“œë¥¼ ì‹¤í–‰í•œ ì´í›„ myBullets ë°°ì—´ì€ { ,F,E,D,C,B,A}ê°€ ëœë‹¤
         ChargeBulletObj = Instantiate(bulletPrefabs[0]); // bulletPrefabs[0] 
 
-        currentGun.InitSetting(); // ÃÑ ÃÊ±âÈ­ ¼³Á¤
+        currentGun.InitSetting(); // ì´ ì´ˆê¸°í™” ì„¤ì •
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (currentGun.gundata.isReloading) return; // ÀçÀåÀü ÁßÀÌ¸é ¾Æ¹«°Íµµ ÇÏÁö ¾ÊÀ½
+        if (currentGun.gundata.isReloading) return; // ì¬ì¥ì „ ì¤‘ì´ë©´ ì•„ë¬´ê²ƒë„ í•˜ì§€ ì•ŠìŒ
 
         if (Input.GetMouseButtonDown(0) && Time.time >= currentGun.gundata.nextFireTime)
-        { //ÁÂÅ¬¸¯ ÄÚµå ±¸Çö
-            if (currentGun.gundata.currentAmmo == 0) Debug.Log("need to reload"); //ÇöÀçÅºÈ¯ Å¥°¡ ºñ¾îÀÖÀ¸¸é
-            else // Åº¾àÀÌ ÀÖÀ¸¸é
+        { //ì¢Œí´ë¦­ ì½”ë“œ êµ¬í˜„
+            if (currentGun.gundata.currentAmmo == 0) Debug.Log("need to reload"); //í˜„ì¬íƒ„í™˜ íê°€ ë¹„ì–´ìˆìœ¼ë©´
+            else // íƒ„ì•½ì´ ìˆìœ¼ë©´
             {
-                currentGun.Fire(player, tip); // ¹ß»ç
+                currentGun.Fire(player, tip); // ë°œì‚¬
                 Debug.Log($"{currentGun.gundata.currentAmmo}");
-                currentGun.gundata.nextFireTime = Time.time + currentGun.gundata.fireRate;  // ¹ß»ç ÁÖ±â¸¦ °ü¸®ÇÏ±â À§ÇØ
+                currentGun.gundata.nextFireTime = Time.time + currentGun.gundata.fireRate;  // ï¿½ß»ï¿½ ï¿½Ö±â¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
+
 
             }
         }
         if (Input.GetMouseButtonDown(1))
-        { // ¿ìÅ¬¸¯ ÄÚµå ±¸Çö
+        { // ìš°í´ë¦­ ì½”ë“œ êµ¬í˜„
             if (currentGun.gundata.currentAmmo == 0) Debug.Log("need to reload");
             else
             {
                 StartCoroutine(currentGun.DelayedShoot(player, tip));
                 Debug.Log($"{currentGun.gundata.currentAmmo}");
 
-                StartCoroutine(currentGun.ReloadAmmo());  // ¿ìÅ¬¸¯½Ã ³²Àº ÃÑ¾Ë °ü°è¾øÀÌ ÀçÀåÀü
+                StartCoroutine(currentGun.ReloadAmmo());  // ìš°í´ë¦­ì‹œ ë‚¨ì€ ì´ì•Œ ê´€ê³„ì—†ì´ ì¬ì¥ì „
             }
         }
         if (Input.GetKeyUp(KeyCode.R))
         {
-            // Âª°Ô ´­·¶À» °æ¿ì ¡æ ÃÑ¾Ë ÀçÀåÀü
+            // ì§§ê²Œ ëˆŒë €ì„ ê²½ìš° â†’ ì´ì•Œ ì¬ì¥ì „
             if (!currentGun.gundata.isReloading)
             {
                 StartCoroutine(currentGun.ReloadAmmo());
