@@ -3,12 +3,6 @@ using UnityEngine;
 
 public class ChargeBullet : BulletBase
 {
-    void Awake()
-    {
-        bulletName = "우클릭탄";
-        speed      = 110f;
-        lifetime   = 2f;
-    }
     public override void Hitscan(RaycastHit2D hitinfo) // 히트스캔 메소드
     {
         base.Hitscan(hitinfo);
@@ -21,7 +15,7 @@ public class ChargeBullet : BulletBase
         base.Projectile();
         if (rb != null)
         {
-            rb.linearVelocity = moveDirection * speed;  // velocity를 사용하여 총알 이동
+            rb.linearVelocity = moveDirection * 110f;  // velocity를 사용하여 총알 이동
         }
     }
 }

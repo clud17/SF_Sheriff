@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6c4a64f19ea2234eb64b9fbe49bc542, type: 3}
+  m_Name: BasicBulletData
+  m_EditorClassIdentifier: 
+  bulletName: "\uAE30\uBCF8\uD0C4"
+  damage: 10
+  healsOnHit: 0
+  lifetime: 2
+  tracerColor: {r: 0, g: 0, b: 0, a: 1}
+  tracerWidth: 0.1
+  tracerPrefab: {fileID: 6902860458574976773, guid: cc8b392653fcd6b46b008b246e0fcce5, type: 3}
+  icon: {fileID: 21300000, guid: 6f94a715a58e81341b838de37e06cee4, type: 3}

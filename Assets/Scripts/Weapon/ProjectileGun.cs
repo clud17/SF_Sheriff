@@ -3,70 +3,67 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI.Table;
-public class ProjectileGun : baseGun
+public class ProjectileGun : BaseGun
 {
     //public BulletBase
     public override void InitSetting()
     {
-        base.InitSetting(); // ºÎ¸ð Å¬·¡½ºÀÇ InitSetting È£Ãâ
-        gundata.fireRate = 0.25f; // ¹ß»ç °£°Ý ¼³Á¤
-        gundata.nextFireTime = 0f; // ÃÊ±âÈ­
-        gundata.AmmoreloadTime = 1.5f; // ÀçÀåÀü ½Ã°£ ¼³Á¤
+        base.InitSetting(); // ï¿½Î¸ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ InitSetting È£ï¿½ï¿½
+        gundata.fireRate = 0.25f; // ï¿½ß»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        gundata.nextFireTime = 0f; // ï¿½Ê±ï¿½È­
+        gundata.AmmoreloadTime = 1.5f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     }
     public override void Fire(GameObject player, Transform tip)
     {
-        // ÃÑ¾Ë ¹ß»ç ¸Þ¼Òµå
+        // ï¿½Ñ¾ï¿½ ï¿½ß»ï¿½ ï¿½Þ¼Òµï¿½
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - tip.position).normalized;
-        // È¸Àü °¢µµ °è»ê
+        // È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
-        //Debug.Log(currentAmmo + "ÀÌ¹Ç·Î " + myBullets[currentAmmo].bulletName + "ÀÌ ¹ß»çµË´Ï´Ù.");
+        //Debug.Log(currentAmmo + "ï¿½Ì¹Ç·ï¿½ " + myBullets[currentAmmo].bulletName + "ï¿½ï¿½ ï¿½ß»ï¿½Ë´Ï´ï¿½.");
         Debug.Log(gundata.currentAmmo);
-        BulletBase now = WC.myBullets[gundata.currentAmmo--];
-        Debug.Log(now);
-        now.gameObject.SetActive(true);
-        now.transform.position = tip.position;            // ¹ß»ç À§Ä¡
-        now.SetDirection(direction);                            // ¹æÇâ ¼³Á¤
-        now.transform.rotation = rotation;                      // È¸Àü ¼³Á¤
-        now.Projectile();
+        
+        GameObject now = WC.myBulletObj[gundata.currentAmmo--];
+        GameObject spawnedBullet = Instantiate(now, tip.position, rotation);
+        Debug.Log(spawnedBullet);
+        spawnedBullet.GetComponent<BulletBase>().Projectile();
     }
     public override IEnumerator DelayedShoot(GameObject player, Transform tip)
     {
-        if (gundata.isCharging || gundata.isReloading) yield break; // ÀÌ¹Ì ½ÇÇà ÁßÀÌ¸é ¹«½Ã
+        if (gundata.isCharging || gundata.isReloading) yield break; // ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
         gundata.isCharging = true;
-        yield return new WaitForSeconds(0.3f); // 0.3ÃÊ ´ë±â  //Â÷Áö¼¦ µô·¹ÀÌ½Ã°£
+        yield return new WaitForSeconds(0.3f); // 0.3ï¿½ï¿½ ï¿½ï¿½ï¿½  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì½Ã°ï¿½
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - tip.position).normalized;
 
-        // È¸Àü °¢µµ °è»ê
+        // È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         Quaternion rotation = Quaternion.Euler(0, 0, angle);
 
-        //ÃÑ¾Ë ¹ß»ç
-        BulletBase now = WC.myBullets[0];
-        Debug.Log(now);
-        now.gameObject.SetActive(true);                         // ¿ÀºêÁ§Æ® ´Ù½Ã È°¼ºÈ­
-        now.transform.position = tip.position;            // ¹ß»ç À§Ä¡
-        now.SetDirection(direction);                            // ¹æÇâ ¼³Á¤
-        now.transform.rotation = rotation;                      // È¸Àü ¼³Á¤
-        now.Projectile();
+        //ï¿½Ñ¾ï¿½ ï¿½ß»ï¿½
 
-        gundata.currentAmmo = 0; // Â÷Áö¼¦À» »ç¿ëÇßÀ¸¹Ç·Î ÇöÀç Åº¾àÀ» 0À¸·Î ¼³Á¤
+        GameObject now = WC.myBulletObj[0];
+        now.GetComponent<BulletBase>().InitFromData();
+        //now.GetComponent<BulletBase>().moveDirection
+        GameObject spawnedBullet = Instantiate(now, tip.position, rotation);
+        spawnedBullet.GetComponent<BulletBase>().Projectile();
 
-        //ÇÃ·¹ÀÌ¾î ³Ë¹é
-        Vector2 knockbackDir = new Vector2(-direction.x, -direction.y).normalized;     // ³Ë¹é ¹æÇâ ¼³Á¤ (xÃàÀº ¿ÞÂÊ/¿À¸¥ÂÊ, yÃàÀº À§ÂÊÀ¸·Î ¼³Á¤)
+        gundata.currentAmmo = 0; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½ï¿½ï¿½ Åºï¿½ï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        // ÇöÀç Ä³¸¯ÅÍÀÇ rigidbody2D¸¦ °¡Á®¿È
+        //ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ë¹ï¿½
+        Vector2 knockbackDir = new Vector2(-direction.x, -direction.y).normalized;     // ï¿½Ë¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (xï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, yï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+
+        // ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ rigidbody2Dï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            Vector2 knockbackForce = knockbackDir * 8f;                         // ³Ë¹é º¤ÅÍ ¼³Á¤(¹æÇâ+Èû)
+            Vector2 knockbackForce = knockbackDir * 8f;                         // ï¿½Ë¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½+ï¿½ï¿½)
 
-            player.GetComponent<PlayerMove>().ApplyKnockback(knockbackForce);   // ÇÃ·¹ÀÌ¾î ÀÌµ¿ ½ºÅ©¸³Æ®¿¡ ³Ë¹é Àû¿ë ÇÔ¼ö È£Ãâ
+            player.GetComponent<PlayerMove>().ApplyKnockback(knockbackForce);   // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ë¹ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ È£ï¿½ï¿½
         }
-        gundata.isCharging = false; // ´Ù½Ã ¹ß»ç °¡´ÉÇØÁü
+        gundata.isCharging = false; // ï¿½Ù½ï¿½ ï¿½ß»ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     }
     public override IEnumerator ReloadAmmo()
     {

@@ -20,7 +20,7 @@ public struct Data
 }
 
 
-public abstract class baseGun : MonoBehaviour
+public abstract class BaseGun : MonoBehaviour
 {
     public Data gundata; // 총의 데이터 구조체
     public WeaponController WC;
