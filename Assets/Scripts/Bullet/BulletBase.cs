@@ -44,10 +44,10 @@ public abstract class BulletBase : MonoBehaviour
     public virtual void Hitscan(RaycastHit2D hitinfo)
     {
         InitFromData();
-        //Debug.Log($"{bulletName}이 발사됨");
         gunmode = 0;
         if (hitinfo.collider != null && hitinfo.collider.CompareTag("Enemy"))  // ray가 맞았을 때, 적 tag가 enemy면 데미지 줌
         {
+            hitinfo.collider.GetComponent<Health>().ApplyDamage(damage);
             Debug.Log("적에게 데미지를 줌(히트스캔)");
         }
 

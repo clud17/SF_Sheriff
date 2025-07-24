@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PassBulletData
   m_EditorClassIdentifier: 
   bulletName: "\uAD00\uD1B5\uD0C4"
-  damage: 10
+  damage: 15
   healsOnHit: 0
   lifetime: 2
   tracerColor: {r: 1, g: 0, b: 0, a: 1}

@@ -24,7 +24,7 @@ public class HitScanGun : BaseGun
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - tip.position).normalized;
-        RaycastHit2D hit = Physics2D.Raycast(tip.position, direction, 30f, LayerMask.GetMask("Enemy"));
+        RaycastHit2D hit = Physics2D.Raycast(tip.position, direction, 30f);
         // 히트스캔을 위한 레이캐스트 총구(tip), 방향, 최대거리(30f), layerMask(enemy) 설정
 
         BulletBase now = WC.myBulletObj[gundata.currentAmmo].GetComponent<BulletBase>();
@@ -60,7 +60,7 @@ public class HitScanGun : BaseGun
         //총알 발사
         if (hit.collider != null)
         {
-            DrawTracer(now, tip.position, direction, 30f);
+            DrawTracer(now, tip.position, direction, hit.distance);
         }
 
         now.Hitscan(hit);
@@ -87,6 +87,7 @@ public class HitScanGun : BaseGun
     }
     public void DrawTracer(BulletBase bullet, Vector2 start, Vector2 direction, float distance)
     {
+        
         Vector2 end = start + direction.normalized * distance;
 
         LineRenderer tracer = Instantiate(bullet.bulletData.tracerPrefab).GetComponent<LineRenderer>();
