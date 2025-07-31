@@ -3,44 +3,49 @@ using UnityEngine.SceneManagement;
 
 public class Portal2DScript : MonoBehaviour
 {
+    // ì´ë™í•  ì”¬ ì´ë¦„ê³¼ ì´ë™ ì¢Œí‘œ
     public string targetSceneName;
-    public Vector2 spawnPositionInTargetScene; // ´ÙÀ½ ¾À¿¡¼­ ÇÃ·¹ÀÌ¾î°¡ ³ªÅ¸³¯ À§Ä¡
+    public Vector2 spawnPositionInTargetScene;
 
-    // ¸¶Áö¸·À¸·Î ÁøÀÔÇÑ Æ÷Å»ÀÇ Á¤º¸¸¦ ÀúÀåÇÏ¿© ´ÙÀ½ ¾À¿¡¼­ ÂüÁ¶ÇÒ ¼ö ÀÖµµ·Ï ÇÕ´Ï´Ù.
-    // (¼±ÅÃ »çÇ×ÀÌÁö¸¸ À¯¿ëÇÕ´Ï´Ù)
-    public static Portal2DScript LastEnteredPortal;
+    // í¬í„¸ ìœ„ì¹˜ ì •ë³´ë§Œ staticìœ¼ë¡œ ì €ì¥ (ì˜¤ë¸Œì íŠ¸ ì°¸ì¡°ëŠ” ì €ì¥í•˜ì§€ ì•ŠìŒ) ê°€ë‚˜ë‹¤
+    private static Vector2? pendingSpawnPosition = null;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
-            LastEnteredPortal = this; // ÇöÀç Æ÷Å» Á¤º¸¸¦ ÀúÀå
+            // ì´ë™í•  ìœ„ì¹˜ë§Œ ë¯¸ë¦¬ ì €ì¥
+            pendingSpawnPosition = spawnPositionInTargetScene;
 
-            // ¾À ·Îµå Àü¿¡ ÀÌº¥Æ® ¸®½º³Ê Ãß°¡
+            // ì”¬ ë¡œë“œ ì´ë²¤íŠ¸ ì—°ê²°
             SceneManager.sceneLoaded += OnSceneLoaded;
-            SceneManager.LoadScene(targetSceneName); // ¾À ·Îµå
+
+            // ì”¬ ì´ë™
+            SceneManager.LoadScene(targetSceneName);
         }
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // ÀÌ Æ÷Å»ÀÌ ·ÎµåÇÑ ¾ÀÀÌ ¸Â´ÂÁö È®ÀÎÇÏ°í, ÇØ´ç ¾ÀÀÌ ·ÎµåµÇ¾úÀ» ¶§¸¸ Ã³¸®
-        if (scene.name == targetSceneName)
+        // ì”¬ ì´ë™ ì™„ë£Œ í›„, ìœ„ì¹˜ ì„¤ì •
+        if (pendingSpawnPosition.HasValue)
         {
-            // ÇÃ·¹ÀÌ¾î ¿ÀºêÁ§Æ®¸¦ Ã£½À´Ï´Ù. DontDestroyOnLoadManager¸¦ »ç¿ëÇßÀ¸¸é
-            // PlayerDontDestroy.Instance.transform ¿¡ Á¢±ÙÇÒ ¼ö ÀÖ½À´Ï´Ù.
-            // ¾Æ´Ï¸é GameObject.FindWithTag("Player"); µµ ÀÛµ¿ÇÕ´Ï´Ù.
             GameObject player = GameObject.FindWithTag("Player");
 
             if (player != null)
             {
-                // ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡¸¦ Æ÷Å»¿¡ ÁöÁ¤µÈ ´ÙÀ½ ¾ÀÀÇ ½ºÆù À§Ä¡·Î ¼³Á¤ÇÕ´Ï´Ù.
-                player.transform.position = LastEnteredPortal.spawnPositionInTargetScene;
+                player.transform.position = pendingSpawnPosition.Value;
+            }
+            else
+            {
+                Debug.LogWarning("Player not found in the loaded scene.");
             }
 
-            // ÀÌº¥Æ® ¸®½º³Ê´Â ÇÑ ¹ø »ç¿ë ÈÄ ¹İµå½Ã Á¦°ÅÇØ¾ß Áßº¹ È£ÃâÀ» ¹æÁöÇÕ´Ï´Ù.
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-            LastEnteredPortal = null; // »ç¿ë ÈÄ ÃÊ±âÈ­
+            // ìœ„ì¹˜ ì •ë³´ ì´ˆê¸°í™”
+            pendingSpawnPosition = null;
         }
+
+        // ì´ë²¤íŠ¸ ë“±ë¡ í•´ì œ (ì¤‘ë³µ ë°©ì§€)
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

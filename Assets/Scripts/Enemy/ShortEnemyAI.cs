@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ShortEnemyAI : EnemyAI
 {
-    
+
     protected override void Init()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform; // 플레이어의 Transform을 찾음
@@ -14,6 +14,10 @@ public class ShortEnemyAI : EnemyAI
         moveSpeed = 4f;
         isPlayerDetected = false;
 
+    }
+    protected override void EnemyAttack()
+    {
+        base.EnemyAttack();
     }
     
 }

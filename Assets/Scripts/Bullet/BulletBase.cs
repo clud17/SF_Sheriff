@@ -45,10 +45,21 @@ public abstract class BulletBase : MonoBehaviour
     {
         InitFromData();
         gunmode = 0;
-        if (hitinfo.collider != null && hitinfo.collider.CompareTag("Enemy"))  // ray가 맞았을 때, 적 tag가 enemy면 데미지 줌
+        if (hitinfo.collider == null) return;
+
+        switch (hitinfo.collider.tag)
         {
-            hitinfo.collider.GetComponent<Health>().ApplyDamage(damage);
-            Debug.Log("적에게 데미지를 줌(히트스캔)");
+            case "Enemy":
+                hitinfo.collider.GetComponent<Health>().ApplyDamage(damage);
+                Debug.Log("적에게 데미지를 줌(히트스캔)");
+                break;
+            case "Switch":
+                Debug.Log("오브젝트 가동됨");
+                hitinfo.collider.GetComponent<Switch>().TurnSwitch();
+                break;
+            default:
+                Debug.Log("BulletBase에서의 태그 미지정");
+                break;
         }
 
     }

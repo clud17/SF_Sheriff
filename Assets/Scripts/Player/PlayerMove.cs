@@ -54,7 +54,7 @@ public class PlayerMove : MonoBehaviour
     private void HandleMovement()
     {
         float moveX = Input.GetAxisRaw("Horizontal");
-        if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown && IsGrounded())
         {
             isDashing = true;
             //Debug.Log("isDashing이 true입니다.");
@@ -68,18 +68,19 @@ public class PlayerMove : MonoBehaviour
         if (!isDashing) // 대시 중이 아니라면 기본 이동
         {
             rb.linearVelocity = new Vector2(moveX * moveSpeed, rb.linearVelocity.y);
-            
+
         }
         else // 대시 중이면
         {
+            
             dashTimer -= Time.deltaTime;
-            if (dashTimer <= 0)
-            {
-                isDashing = false;
-                //Debug.Log("isDashing이 false입니다.");
-                anim.SetBool("isDashing", false);
-                rb.gravityScale = 2f;
-            }
+                if (dashTimer <= 0)
+                {
+                    isDashing = false;
+                    //Debug.Log("isDashing이 false입니다.");
+                    anim.SetBool("isDashing", false);
+                    rb.gravityScale = 2f;
+                }
         }
         
     }

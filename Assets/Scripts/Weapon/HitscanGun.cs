@@ -11,7 +11,7 @@ public class HitScanGun : BaseGun
     public override void InitSetting()
     {
         base.InitSetting(); // 부모 클래스의 InitSetting 호출
-        gundata.fireRate = 0.25f; // 발사 간격 설정
+        gundata.fireRate = 0.5f; // 발사 간격 설정
         gundata.nextFireTime = 0f; // 초기화
         gundata.AmmoreloadTime = 1.5f; // 재장전 시간 설정
 
@@ -53,7 +53,7 @@ public class HitScanGun : BaseGun
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - tip.position).normalized;
 
-        RaycastHit2D hit = Physics2D.Raycast(tip.position, direction, 30f, LayerMask.GetMask("Enemy"));    // 히트스캔을 위한 레이캐스트 총구(tip), 방향, 최대거리(10f), layerMask(enemy) 설정
+        RaycastHit2D hit = Physics2D.Raycast(tip.position, direction, 30f);    // 히트스캔을 위한 레이캐스트 총구(tip), 방향, 최대거리(10f), layerMask(enemy) 설정
 
 
         BulletBase now = WC.myBulletObj[gundata.currentAmmo].GetComponent<BulletBase>();
@@ -61,6 +61,10 @@ public class HitScanGun : BaseGun
         if (hit.collider != null)
         {
             DrawTracer(now, tip.position, direction, hit.distance);
+        }
+        else
+        {
+            DrawTracer(now, tip.position, direction, 30f); // 맞은 대상이 없으면 최대 거리로 궤적 그리기
         }
 
         now.Hitscan(hit);

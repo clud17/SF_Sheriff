@@ -9,6 +9,7 @@ public class Health : MonoBehaviour
 
     public void ApplyDamage(float damage)
     {
+        //인코딩 깨지는 거 테스트
         Debug.Log("applydamage 실행됨");
         currentHealth -= damage;
         Debug.Log($"{gameObject.name} took {damage} damage!");

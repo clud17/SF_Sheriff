@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class UIDontDestroy : MonoBehaviour
 {
-    public static UIDontDestroy Instance; // ½Ì±ÛÅæ ÀÎ½ºÅÏ½º
+    public static UIDontDestroy Instance; // ì‹±ê¸€í†¤ ì¸ìŠ¤í„´ìŠ¤
 
     private void Awake()
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject); // ÀÌ¹Ì ÀÎ½ºÅÏ½º°¡ ÀÖ´Ù¸é ÀÚ½ÅÀ» ÆÄ±«
+            Destroy(gameObject); // ì´ë¯¸ ì¸ìŠ¤í„´ìŠ¤ê°€ ìˆë‹¤ë©´ ìì‹ ì„ íŒŒê´´
             return;
         }
 
-        Instance = this; // ÀÌ ÀÎ½ºÅÏ½º¸¦ À¯ÀÏÇÑ ÀÎ½ºÅÏ½º·Î ¼³Á¤
-        DontDestroyOnLoad(gameObject); // ¾À º¯°æ ½Ã ÆÄ±«µÇÁö ¾Êµµ·Ï ¼³Á¤
+        Instance = this; // ì´ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ìœ ì¼í•œ ì¸ìŠ¤í„´ìŠ¤ë¡œ ì„¤ì •
+        DontDestroyOnLoad(gameObject); // ì”¬ ë³€ê²½ ì‹œ íŒŒê´´ë˜ì§€ ì•Šë„ë¡ ì„¤ì •
     }
 }
