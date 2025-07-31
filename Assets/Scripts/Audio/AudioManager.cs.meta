@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ca130d3aa2d4f2e45a67d2dd4fd74630
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ShootingSound: {fileID: 8300000, guid: 29b5f575e9b497545a2b4344a0e3c0e5, type: 3}
+  - ChargeSound: {fileID: 8300000, guid: 568fb52140a23f04780438ccf5339874, type: 3}
+  - ReloadSound: {fileID: 8300000, guid: fcc88ab51eeb81c4192518d0614c2714, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

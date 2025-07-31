@@ -18,11 +18,6 @@ public class WeaponController : MonoBehaviour
     public BulletData[] bulletDatas;
 
     // 사운드
-    public AudioClip ShootingSound;  // 총기 발사 사운드
-    public AudioClip ChargeSound;  // 충전 사운드
-    public AudioClip ReloadSound;
-    AudioSource aud;
-
     void Start()
     {
         /// Start() 메소드
@@ -43,7 +38,6 @@ public class WeaponController : MonoBehaviour
         myBulletData[0] = bulletDatas[startBullet[0]];
         currentGun.InitSetting(); // 총 초기화 설정
         
-        this.aud = GetComponent<AudioSource>();
     }
 
 
@@ -57,7 +51,7 @@ public class WeaponController : MonoBehaviour
             else // 탄약이 있으면
             {
                 currentGun.Fire(player, tip); // 발사
-                this.aud.PlayOneShot(ShootingSound); // 총기 발사 사운드 재생
+                AudioManager.Instance.PlaySound(AudioManager.Instance.ShootingSound); // 총기 발사 사운드 재생
                 Debug.Log($"{currentGun.gundata.currentAmmo}");
                 currentGun.gundata.nextFireTime = Time.time + currentGun.gundata.fireRate;  // 발사 주기를 관리하기 위해
             }
@@ -68,9 +62,9 @@ public class WeaponController : MonoBehaviour
             else
             {
                 StartCoroutine(currentGun.DelayedShoot(player, tip));
-                this.aud.PlayOneShot(ChargeSound); // 총기 발사 사운드 재생
+                AudioManager.Instance.PlaySound(AudioManager.Instance.ChargeSound);
                 Debug.Log($"{currentGun.gundata.currentAmmo}");
-                this.aud.PlayOneShot(ReloadSound); // 재장전 사운드 재생
+                AudioManager.Instance.PlaySound(AudioManager.Instance.ReloadSound);
                 StartCoroutine(currentGun.ReloadAmmo());  // 우클릭시 남은 총알 관계없이 재장전
             }
         }
@@ -80,7 +74,7 @@ public class WeaponController : MonoBehaviour
             if (!currentGun.gundata.isReloading)
             {
                 StartCoroutine(currentGun.ReloadAmmo());
-                this.aud.PlayOneShot(ReloadSound); // 재장전 사운드 재생
+                AudioManager.Instance.PlaySound(AudioManager.Instance.ReloadSound); // 재장전 사운드 재생
             }
         }
     }

@@ -4,10 +4,10 @@ using UnityEngine.XR;
 public class PlayerMove : MonoBehaviour
 {
     //캐릭터의 좌우,점프,대시 등의 전반적인 움직임을 구현하는 코드
-
-    [SerializeField] private float moveSpeed = 5f; // 이속
-    [SerializeField] private float jumpSpeed = 15f; // 점프높이
-    [SerializeField] private float maxJumpTime = 0.5f; // 최대점프시간
+    float moveX;
+    private float moveSpeed; // 이속
+    private float jumpSpeed; // 점프높이
+    private float maxJumpTime; // 최대점프시간
 
     //isJumping 확인용 필드
     [SerializeField] private LayerMask groundLayer; 
@@ -15,6 +15,7 @@ public class PlayerMove : MonoBehaviour
     private Collider2D col;
     private Rigidbody2D rb;
     private Animator anim;
+    private SpriteRenderer sprend;
 
     private bool isJumping = false;
     private float jumpTimeCounter = 0f;
@@ -27,7 +28,7 @@ public class PlayerMove : MonoBehaviour
     private float dashTimer = 0f; // 대시 시간 체크용
     private float lastDashTime = -999f; // Time.time과 함께 쿨다운 체크용
     /*────────────────────────────*/
-
+    
     private bool isKnockback = false; // 넉백 상태 플래그
 
     void Start()
@@ -36,9 +37,13 @@ public class PlayerMove : MonoBehaviour
         col = GetComponent<Collider2D>();
         anim = GetComponent<Animator>();
         rb.linearDamping = 0f;  // 감속 없음
-        rb.gravityScale = 2.0f;
+        rb.gravityScale = 3.0f;
         dashSpeed = 30f;
-        // sr = GetComponent<SpriteRenderer>();
+
+        moveSpeed = 6.4f; // 이속
+        jumpSpeed = 14f; // 점프높이
+        maxJumpTime = 0.1f; // 최대점프시간
+        sprend = GetComponent<SpriteRenderer>();
         // anim = GetComponent<Animator>();
     }
 
@@ -46,14 +51,23 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         if (isKnockback) return; //넉백중이면 이동X
+        moveX = Input.GetAxisRaw("Horizontal");  // 좌우 이동 입력
 
+        if (moveX < 0) // 좌측 이동
+        {
+            sprend.transform.localScale = new Vector3(-1f, 1f, 1f); // 좌측 이동시 스프라이트 반전
+        }
+        else if (moveX > 0) // 우측 이동
+        {
+            sprend.transform.localScale = new Vector3(1f, 1f, 1f); // 우측 이동시 스프라이트 원래대로
+        }
         HandleMovement();
         HandleJump();
     }
     //좌우이동 및 대시 기능
     private void HandleMovement()
     {
-        float moveX = Input.GetAxisRaw("Horizontal");
+        // float moveX = Input.GetAxisRaw("Horizontal");
         if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown && IsGrounded())
         {
             isDashing = true;
@@ -68,19 +82,19 @@ public class PlayerMove : MonoBehaviour
         if (!isDashing) // 대시 중이 아니라면 기본 이동
         {
             rb.linearVelocity = new Vector2(moveX * moveSpeed, rb.linearVelocity.y);
-
+            
         }
         else // 대시 중이면
         {
-            
+
             dashTimer -= Time.deltaTime;
-                if (dashTimer <= 0)
-                {
-                    isDashing = false;
-                    //Debug.Log("isDashing이 false입니다.");
-                    anim.SetBool("isDashing", false);
-                    rb.gravityScale = 2f;
-                }
+            if (dashTimer <= 0)
+            {
+                isDashing = false;
+                //Debug.Log("isDashing이 false입니다.");
+                anim.SetBool("isDashing", false);
+                rb.gravityScale = 2f;
+            }
         }
         
     }
