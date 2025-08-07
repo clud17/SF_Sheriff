@@ -8,6 +8,10 @@ public class EnemyAI : MonoBehaviour
     protected float attackRange;
     protected float moveSpeed;
 
+    protected float damage;  // 공격력
+    protected float attackCooldown; // 공격 쿨타임
+    protected float knockbackRange; // 넉백 거리
+
     protected bool isPlayerDetected;
     
     protected Health HP;
@@ -81,7 +85,7 @@ public class EnemyAI : MonoBehaviour
 
     void StopMovement()
     {
-        //정지 상태 유지
+        //정지 상태 유지(아무 코드 없는게 정상)
     }
     // protected Vector2 patrolDirection;
     // protected float patrolMoveDuration = 1f;
@@ -97,8 +101,7 @@ public class EnemyAI : MonoBehaviour
         // isPatrolling = true;
     }
     protected virtual void EnemyAttack()
-    {
-        
+    {        
     }
 
     void OnDrawGizmosSelected()   // 탐지범위, 공격범위 확인용 gizmos (삭제해도 됨)

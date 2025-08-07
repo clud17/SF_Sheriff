@@ -29,7 +29,7 @@ public class PlayerMove : MonoBehaviour
     private float lastDashTime = -999f; // Time.time과 함께 쿨다운 체크용
     /*────────────────────────────*/
     
-    private bool isKnockback = false; // 넉백 상태 플래그
+    public bool isKnockback = false; // 넉백 상태 플래그
 
     void Start()
     {
@@ -155,6 +155,7 @@ public class PlayerMove : MonoBehaviour
         isKnockback = true;
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(force, ForceMode2D.Impulse);       // 넉백 구현
+        Debug.Log("넉백 적용 됨");
     }
 
 }

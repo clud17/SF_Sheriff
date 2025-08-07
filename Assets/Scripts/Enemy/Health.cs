@@ -3,23 +3,23 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     public float maxHealth = 100f;
-    public float currentHealth;
+    public float currentEnemyHealth;
 
-    void Awake() => currentHealth = maxHealth;
+    void Awake() => currentEnemyHealth = maxHealth;
 
     public void ApplyDamage(float damage)
     {
         //인코딩 깨지는 거 테스트
         Debug.Log("applydamage 실행됨");
-        currentHealth -= damage;
+        currentEnemyHealth -= damage;
         Debug.Log($"{gameObject.name} took {damage} damage!");
 
-        if (currentHealth <= 0f) Die();
+        if (currentEnemyHealth <= 0f) Die();
     }
 
     public void Heal(float amount)
     {
-        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        currentEnemyHealth = Mathf.Min(currentEnemyHealth + amount, maxHealth);
         Debug.Log($"{gameObject.name} healed {amount} HP!");
     }
 

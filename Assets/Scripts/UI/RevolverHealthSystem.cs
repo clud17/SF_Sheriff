@@ -1,143 +1,143 @@
 using UnityEngine;
-using UnityEngine.UI; // UI ¿ä¼Ò¸¦ »ç¿ëÇÏ±â À§ÇØ ÇÊ¿ä
+using UnityEngine.UI; // UI ìš”ì†Œë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ í•„ìš”
 
 public class RevolverHealthSystem : MonoBehaviour
 {
-    [Header("Ã¼·Â ¼³Á¤")]
-    public int maxHealth = 60; // ÃÖ´ë Ã¼·Â (ÃÑ¾Ë ½½·Ô °³¼ö * 10À¸·Î »ı°¢, ¿¹: 60)
-    private int currentHealth; // ÇöÀç ÇÃ·¹ÀÌ¾îÀÇ Ã¼·Â
+    [Header("ì²´ë ¥ ì„¤ì •")]
+    public int maxHealth = 60; // ìµœëŒ€ ì²´ë ¥ (ì´ì•Œ ìŠ¬ë¡¯ ê°œìˆ˜ * 10ìœ¼ë¡œ ìƒê°, ì˜ˆ: 60)
+    private int currentHealth; // í˜„ì¬ í”Œë ˆì´ì–´ì˜ ì²´ë ¥
 
-    [Header("ÃÑ¾Ë ¼³Á¤")]
-    public int maxBullets = 6; // ¸®º¼¹öÀÇ ÃÖ´ë ÃÑ¾Ë ½½·Ô °³¼ö (ÃÑ±¸ °³¼ö)
-    private int currentUsableBullets; // ÇöÀç ÃÑÀ» ½ò ¼ö ÀÖ´Â (¸·È÷Áö ¾ÊÀº) ÃÑ¾Ë ½½·Ô °³¼ö
-    private bool[] bulletBlockedStatus; // °¢ ÃÑ¾Ë ½½·ÔÀÌ ¸·Çû´ÂÁö ¿©ºÎ¸¦ ÀúÀåÇÒ ¹è¿­ (true = ¸·Èû)
+    [Header("ì´ì•Œ ì„¤ì •")]
+    public int maxBullets = 6; // ë¦¬ë³¼ë²„ì˜ ìµœëŒ€ ì´ì•Œ ìŠ¬ë¡¯ ê°œìˆ˜ (ì´êµ¬ ê°œìˆ˜)
+    private int currentUsableBullets; // í˜„ì¬ ì´ì„ ì  ìˆ˜ ìˆëŠ” (ë§‰íˆì§€ ì•Šì€) ì´ì•Œ ìŠ¬ë¡¯ ê°œìˆ˜
+    private bool[] bulletBlockedStatus; // ê° ì´ì•Œ ìŠ¬ë¡¯ì´ ë§‰í˜”ëŠ”ì§€ ì—¬ë¶€ë¥¼ ì €ì¥í•  ë°°ì—´ (true = ë§‰í˜)
 
-    [Header("UI ¿¬°á")]
-    // ÀÎ½ºÆåÅÍ¿¡¼­ ¼ø¼­´ë·Î ÃÑ¾Ë ½½·Ô UI Image¸¦ ÇÒ´çÇØ¾ß ÇÕ´Ï´Ù (¿¹: bulletSlot1, bulletSlot2...)
+    [Header("UI ì—°ê²°")]
+    // ì¸ìŠ¤í™í„°ì—ì„œ ìˆœì„œëŒ€ë¡œ ì´ì•Œ ìŠ¬ë¡¯ UI Imageë¥¼ í• ë‹¹í•´ì•¼ í•©ë‹ˆë‹¤ (ì˜ˆ: bulletSlot1, bulletSlot2...)
     public Image[] bulletSlots;
-    public Sprite filledBulletSprite;   // ÃÑ¾ËÀÌ Ã¤¿öÁø ½ºÇÁ¶óÀÌÆ® (½ÃÀÛ ½Ã)
-    public Sprite blockedBulletSprite;  // ÃÑ±¸°¡ ¸·ÇûÀ» ¶§ÀÇ ½ºÇÁ¶óÀÌÆ® (µ¥¹ÌÁö ½Ã)
+    public Sprite filledBulletSprite;   // ì´ì•Œì´ ì±„ì›Œì§„ ìŠ¤í”„ë¼ì´íŠ¸ (ì‹œì‘ ì‹œ)
+    public Sprite blockedBulletSprite;  // ì´êµ¬ê°€ ë§‰í˜”ì„ ë•Œì˜ ìŠ¤í”„ë¼ì´íŠ¸ (ë°ë¯¸ì§€ ì‹œ)
 
-    // ÃÊ±âÈ­
+    // ì´ˆê¸°í™”
     void Start()
     {
-        currentHealth = maxHealth; // Ã¼·ÂÀ» ÃÖ´ë·Î ¼³Á¤
-        currentUsableBullets = maxBullets; // ½ÃÀÛ ½Ã ¸ğµç ÃÑ±¸°¡ »ç¿ë °¡´É (¸·È÷Áö ¾ÊÀ½)
+        currentHealth = maxHealth; // ì²´ë ¥ì„ ìµœëŒ€ë¡œ ì„¤ì •
+        currentUsableBullets = maxBullets; // ì‹œì‘ ì‹œ ëª¨ë“  ì´êµ¬ê°€ ì‚¬ìš© ê°€ëŠ¥ (ë§‰íˆì§€ ì•ŠìŒ)
 
-        // °¢ ÃÑ¾Ë ½½·ÔÀÇ ¸·Èû »óÅÂ¸¦ ÃÊ±âÈ­ (¸ğµÎ '¸·È÷Áö ¾ÊÀ½' »óÅÂ·Î ½ÃÀÛ)
+        // ê° ì´ì•Œ ìŠ¬ë¡¯ì˜ ë§‰í˜ ìƒíƒœë¥¼ ì´ˆê¸°í™” (ëª¨ë‘ 'ë§‰íˆì§€ ì•ŠìŒ' ìƒíƒœë¡œ ì‹œì‘)
         bulletBlockedStatus = new bool[maxBullets];
         for (int i = 0; i < maxBullets; i++)
         {
-            bulletBlockedStatus[i] = false; // ±âº»ÀûÀ¸·Î ¸·È÷Áö ¾ÊÀº »óÅÂ
+            bulletBlockedStatus[i] = false; // ê¸°ë³¸ì ìœ¼ë¡œ ë§‰íˆì§€ ì•Šì€ ìƒíƒœ
         }
 
-        UpdateUI(); // ½ÃÀÛ ½Ã UI¸¦ ÃÊ±â »óÅÂ(¸ğµÎ Ã¤¿öÁø ÃÑ±¸)·Î ¾÷µ¥ÀÌÆ®
+        UpdateUI(); // ì‹œì‘ ì‹œ UIë¥¼ ì´ˆê¸° ìƒíƒœ(ëª¨ë‘ ì±„ì›Œì§„ ì´êµ¬)ë¡œ ì—…ë°ì´íŠ¸
     }
 
-    // µ¥¹ÌÁö¸¦ ¹Ş´Â ÇÔ¼ö
+    // ë°ë¯¸ì§€ë¥¼ ë°›ëŠ” í•¨ìˆ˜
     public void TakeDamage(int damage)
     {
-        currentHealth -= damage; // ÇöÀç Ã¼·Â¿¡¼­ µ¥¹ÌÁö °¨¼Ò
+        currentHealth -= damage; // í˜„ì¬ ì²´ë ¥ì—ì„œ ë°ë¯¸ì§€ ê°ì†Œ
 
-        // Ã¼·ÂÀÌ 0 ¹Ì¸¸À¸·Î ³»·Á°¡Áö ¾Êµµ·Ï º¸Á¤
+        // ì²´ë ¥ì´ 0 ë¯¸ë§Œìœ¼ë¡œ ë‚´ë ¤ê°€ì§€ ì•Šë„ë¡ ë³´ì •
         if (currentHealth < 0)
         {
             currentHealth = 0;
         }
 
-        // --- ÇÙ½É ·ÎÁ÷: Ã¼·Â¿¡ µû¶ó ÃÑ¾Ë ½½·Ô ¸·±â (°ËÀº»ö ½ºÇÁ¶óÀÌÆ®·Î º¯°æ) ---
-        // ÃÑ¾Ë 1°³´ç ÇÊ¿äÇÑ Ã¼·Â(µ¥¹ÌÁö) ´ÜÀ§ °è»ê (¿¹: 60 / 6 = 10 µ¥¹ÌÁö´ç ÃÑ¾Ë 1°³)
+        // --- í•µì‹¬ ë¡œì§: ì²´ë ¥ì— ë”°ë¼ ì´ì•Œ ìŠ¬ë¡¯ ë§‰ê¸° (ê²€ì€ìƒ‰ ìŠ¤í”„ë¼ì´íŠ¸ë¡œ ë³€ê²½) ---
+        // ì´ì•Œ 1ê°œë‹¹ í•„ìš”í•œ ì²´ë ¥(ë°ë¯¸ì§€) ë‹¨ìœ„ ê³„ì‚° (ì˜ˆ: 60 / 6 = 10 ë°ë¯¸ì§€ë‹¹ ì´ì•Œ 1ê°œ)
         int healthPerBullet = maxHealth / maxBullets;
 
-        // ÇöÀç Ã¼·ÂÀ¸·Î ÃÑÀ» ½ò ¼ö ÀÖ´Â ÃÖ´ë ÃÑ¾Ë ½½·Ô °³¼ö °è»ê
+        // í˜„ì¬ ì²´ë ¥ìœ¼ë¡œ ì´ì„ ì  ìˆ˜ ìˆëŠ” ìµœëŒ€ ì´ì•Œ ìŠ¬ë¡¯ ê°œìˆ˜ ê³„ì‚°
         int newUsableBulletCount = Mathf.CeilToInt((float)currentHealth / healthPerBullet);
 
-        // ÇöÀç ½ò ¼ö ÀÖ´Â ÃÑ¾Ë °³¼ö°¡ ÁÙ¾îµé¾ú´Ù¸é (Áï, µ¥¹ÌÁö¸¦ ¹Ş¾Æ ÃÑ±¸°¡ ¸·Çô¾ß ÇÑ´Ù¸é)
+        // í˜„ì¬ ì  ìˆ˜ ìˆëŠ” ì´ì•Œ ê°œìˆ˜ê°€ ì¤„ì–´ë“¤ì—ˆë‹¤ë©´ (ì¦‰, ë°ë¯¸ì§€ë¥¼ ë°›ì•„ ì´êµ¬ê°€ ë§‰í˜€ì•¼ í•œë‹¤ë©´)
         if (newUsableBulletCount < currentUsableBullets)
         {
-            // ÁÙ¾îµç °³¼ö¸¸Å­ ÃÑ¾Ë ½½·ÔÀ» µÚ¿¡¼­ºÎÅÍ ¸·À½ (bulletBlockedStatus¸¦ true·Î ¼³Á¤)
+            // ì¤„ì–´ë“  ê°œìˆ˜ë§Œí¼ ì´ì•Œ ìŠ¬ë¡¯ì„ ë’¤ì—ì„œë¶€í„° ë§‰ìŒ (bulletBlockedStatusë¥¼ trueë¡œ ì„¤ì •)
             for (int i = currentUsableBullets - 1; i >= newUsableBulletCount; i--)
             {
-                bulletBlockedStatus[i] = true; // ÇØ´ç ½½·ÔÀ» ¸·Èû »óÅÂ·Î ¼³Á¤
+                bulletBlockedStatus[i] = true; // í•´ë‹¹ ìŠ¬ë¡¯ì„ ë§‰í˜ ìƒíƒœë¡œ ì„¤ì •
             }
-            currentUsableBullets = newUsableBulletCount; // ½ò ¼ö ÀÖ´Â ÃÑ¾Ë °³¼ö ¾÷µ¥ÀÌÆ®
+            currentUsableBullets = newUsableBulletCount; // ì  ìˆ˜ ìˆëŠ” ì´ì•Œ ê°œìˆ˜ ì—…ë°ì´íŠ¸
 
-            Debug.Log($"µ¥¹ÌÁö¸¦ ¹Ş¾Æ ÃÑ±¸ ½½·ÔÀÌ {currentUsableBullets}°³ ³²¾Ò½À´Ï´Ù. (ÃÑ {maxBullets - currentUsableBullets}°³ ¸·Èû)");
+            Debug.Log($"ë°ë¯¸ì§€ë¥¼ ë°›ì•„ ì´êµ¬ ìŠ¬ë¡¯ì´ {currentUsableBullets}ê°œ ë‚¨ì•˜ìŠµë‹ˆë‹¤. (ì´ {maxBullets - currentUsableBullets}ê°œ ë§‰í˜)");
 
-            // ÃÑ±¸ ½½·ÔÀÌ ¸ğµÎ ¸·ÇûÀ» ¶§ °ÔÀÓ ¿À¹ö Ã³¸®
+            // ì´êµ¬ ìŠ¬ë¡¯ì´ ëª¨ë‘ ë§‰í˜”ì„ ë•Œ ê²Œì„ ì˜¤ë²„ ì²˜ë¦¬
             if (currentUsableBullets <= 0)
             {
-                Debug.Log("°ÔÀÓ ¿À¹ö! ¸ğµç ÃÑ±¸ ½½·ÔÀÌ ¸·Çû½À´Ï´Ù.");
-                // ¿©±â¿¡ °ÔÀÓ ¿À¹ö Ã³¸® ·ÎÁ÷ Ãß°¡ (¿¹: °ÔÀÓ Àç½ÃÀÛ, Æ¯Á¤ UI È°¼ºÈ­ µî)
+                Debug.Log("ê²Œì„ ì˜¤ë²„! ëª¨ë“  ì´êµ¬ ìŠ¬ë¡¯ì´ ë§‰í˜”ìŠµë‹ˆë‹¤.");
+                // ì—¬ê¸°ì— ê²Œì„ ì˜¤ë²„ ì²˜ë¦¬ ë¡œì§ ì¶”ê°€ (ì˜ˆ: ê²Œì„ ì¬ì‹œì‘, íŠ¹ì • UI í™œì„±í™” ë“±)
             }
         }
 
-        UpdateUI(); // UI ¾÷µ¥ÀÌÆ® ÇÔ¼ö È£Ãâ (¸·Èù ÃÑ±¸¸¦ °ËÀº»ö ½ºÇÁ¶óÀÌÆ®·Î º¯°æ)
+        UpdateUI(); // UI ì—…ë°ì´íŠ¸ í•¨ìˆ˜ í˜¸ì¶œ (ë§‰íŒ ì´êµ¬ë¥¼ ê²€ì€ìƒ‰ ìŠ¤í”„ë¼ì´íŠ¸ë¡œ ë³€ê²½)
     }
 
-    // Ã¼·ÂÀ» È¸º¹ÇÏ´Â ÇÔ¼ö
+    // ì²´ë ¥ì„ íšŒë³µí•˜ëŠ” í•¨ìˆ˜
     public void Heal(int amount)
     {
-        currentHealth += amount; // ÇöÀç Ã¼·Â¿¡ È¸º¹·® Ãß°¡
+        currentHealth += amount; // í˜„ì¬ ì²´ë ¥ì— íšŒë³µëŸ‰ ì¶”ê°€
 
-        // Ã¼·ÂÀÌ ÃÖ´ë Ã¼·ÂÀ» ³ÑÁö ¾Êµµ·Ï º¸Á¤
+        // ì²´ë ¥ì´ ìµœëŒ€ ì²´ë ¥ì„ ë„˜ì§€ ì•Šë„ë¡ ë³´ì •
         if (currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
         }
 
-        // --- ÇÙ½É ·ÎÁ÷: Ã¼·Â È¸º¹¿¡ µû¶ó ¸·Èù ÃÑ±¸ ´Ù½Ã È°¼ºÈ­ ---
-        // ÃÑ¾Ë 1°³´ç ÇÊ¿äÇÑ Ã¼·Â(µ¥¹ÌÁö) ´ÜÀ§ °è»ê
+        // --- í•µì‹¬ ë¡œì§: ì²´ë ¥ íšŒë³µì— ë”°ë¼ ë§‰íŒ ì´êµ¬ ë‹¤ì‹œ í™œì„±í™” ---
+        // ì´ì•Œ 1ê°œë‹¹ í•„ìš”í•œ ì²´ë ¥(ë°ë¯¸ì§€) ë‹¨ìœ„ ê³„ì‚°
         int healthPerBullet = maxHealth / maxBullets;
 
-        // ÇöÀç Ã¼·ÂÀ¸·Î ÃÑÀ» ½ò ¼ö ÀÖ´Â ÃÖ´ë ÃÑ¾Ë ½½·Ô °³¼ö °è»ê
+        // í˜„ì¬ ì²´ë ¥ìœ¼ë¡œ ì´ì„ ì  ìˆ˜ ìˆëŠ” ìµœëŒ€ ì´ì•Œ ìŠ¬ë¡¯ ê°œìˆ˜ ê³„ì‚°
         int newUsableBulletCount = Mathf.CeilToInt((float)currentHealth / healthPerBullet);
 
-        // ÇöÀç ½ò ¼ö ÀÖ´Â ÃÑ¾Ë °³¼ö°¡ ´Ã¾î³µ´Ù¸é (Áï, Ã¼·ÂÀ» È¸º¹ÇÏ¿© ÃÑ±¸¸¦ È°¼ºÈ­ÇØ¾ß ÇÑ´Ù¸é)
+        // í˜„ì¬ ì  ìˆ˜ ìˆëŠ” ì´ì•Œ ê°œìˆ˜ê°€ ëŠ˜ì–´ë‚¬ë‹¤ë©´ (ì¦‰, ì²´ë ¥ì„ íšŒë³µí•˜ì—¬ ì´êµ¬ë¥¼ í™œì„±í™”í•´ì•¼ í•œë‹¤ë©´)
         if (newUsableBulletCount > currentUsableBullets)
         {
-            // ´Ã¾î³­ °³¼ö¸¸Å­ ÃÑ¾Ë ½½·ÔÀ» ¾Õ¿¡¼­ºÎÅÍ È°¼ºÈ­ (bulletBlockedStatus¸¦ false·Î ¼³Á¤)
-            // Áï, ¸·Çû´ø ÃÑ±¸¸¦ ´Ù½Ã Ã¤¿öÁø »óÅÂ·Î µÇµ¹¸²
-            for (int i = currentUsableBullets; i < newUsableBulletCount; i++) // ÁÖÀÇ: currentUsableBulletsºÎÅÍ ½ÃÀÛ
+            // ëŠ˜ì–´ë‚œ ê°œìˆ˜ë§Œí¼ ì´ì•Œ ìŠ¬ë¡¯ì„ ì•ì—ì„œë¶€í„° í™œì„±í™” (bulletBlockedStatusë¥¼ falseë¡œ ì„¤ì •)
+            // ì¦‰, ë§‰í˜”ë˜ ì´êµ¬ë¥¼ ë‹¤ì‹œ ì±„ì›Œì§„ ìƒíƒœë¡œ ë˜ëŒë¦¼
+            for (int i = currentUsableBullets; i < newUsableBulletCount; i++) // ì£¼ì˜: currentUsableBulletsë¶€í„° ì‹œì‘
             {
-                if (i < maxBullets) // ¹è¿­ ¹üÀ§¸¦ ¹ş¾î³ªÁö ¾Êµµ·Ï È®ÀÎ
+                if (i < maxBullets) // ë°°ì—´ ë²”ìœ„ë¥¼ ë²—ì–´ë‚˜ì§€ ì•Šë„ë¡ í™•ì¸
                 {
-                    bulletBlockedStatus[i] = false; // ÇØ´ç ½½·ÔÀ» ¸·È÷Áö ¾ÊÀº »óÅÂ·Î ¼³Á¤
+                    bulletBlockedStatus[i] = false; // í•´ë‹¹ ìŠ¬ë¡¯ì„ ë§‰íˆì§€ ì•Šì€ ìƒíƒœë¡œ ì„¤ì •
                 }
             }
-            currentUsableBullets = newUsableBulletCount; // ½ò ¼ö ÀÖ´Â ÃÑ¾Ë °³¼ö ¾÷µ¥ÀÌÆ®
+            currentUsableBullets = newUsableBulletCount; // ì  ìˆ˜ ìˆëŠ” ì´ì•Œ ê°œìˆ˜ ì—…ë°ì´íŠ¸
 
-            Debug.Log($"Ã¼·Â È¸º¹À¸·Î ÃÑ±¸ ½½·ÔÀÌ {currentUsableBullets}°³ ³²¾Ò½À´Ï´Ù.");
+            Debug.Log($"ì²´ë ¥ íšŒë³µìœ¼ë¡œ ì´êµ¬ ìŠ¬ë¡¯ì´ {currentUsableBullets}ê°œ ë‚¨ì•˜ìŠµë‹ˆë‹¤.");
         }
 
-        UpdateUI(); // UI ¾÷µ¥ÀÌÆ® ÇÔ¼ö È£Ãâ (¸·Èù ÃÑ±¸°¡ ´Ù½Ã Ã¤¿öÁø ½ºÇÁ¶óÀÌÆ®·Î º¯°æ)
+        UpdateUI(); // UI ì—…ë°ì´íŠ¸ í•¨ìˆ˜ í˜¸ì¶œ (ë§‰íŒ ì´êµ¬ê°€ ë‹¤ì‹œ ì±„ì›Œì§„ ìŠ¤í”„ë¼ì´íŠ¸ë¡œ ë³€ê²½)
     }
 
 
-    // ÃÑÀ» ½î´Â ÇÔ¼ö (ÇöÀç´Â µ¥¹ÌÁö/È¸º¹ Å×½ºÆ®¿¡ ÁıÁß)
+    // ì´ì„ ì˜ëŠ” í•¨ìˆ˜ (í˜„ì¬ëŠ” ë°ë¯¸ì§€/íšŒë³µ í…ŒìŠ¤íŠ¸ì— ì§‘ì¤‘)
     public void Shoot()
     {
-        Debug.Log("ÃÑÀ» ½î´Â ±â´ÉÀº ¾ÆÁ÷ ±¸ÇöµÇÁö ¾Ê¾Ò½À´Ï´Ù. µ¥¹ÌÁö/È¸º¹ Å×½ºÆ®¿¡ ÁıÁßÇÕ´Ï´Ù.");
-        // ³ªÁß¿¡ ÃÑÀ» ½î´Â ·ÎÁ÷ÀÌ ¿©±â¿¡ Ãß°¡µË´Ï´Ù.
+        Debug.Log("ì´ì„ ì˜ëŠ” ê¸°ëŠ¥ì€ ì•„ì§ êµ¬í˜„ë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤. ë°ë¯¸ì§€/íšŒë³µ í…ŒìŠ¤íŠ¸ì— ì§‘ì¤‘í•©ë‹ˆë‹¤.");
+        // ë‚˜ì¤‘ì— ì´ì„ ì˜ëŠ” ë¡œì§ì´ ì—¬ê¸°ì— ì¶”ê°€ë©ë‹ˆë‹¤.
     }
 
-    // UI¸¦ ¾÷µ¥ÀÌÆ®ÇÏ´Â ÇÔ¼ö (ÃÑ±¸ ½½·Ô ½ºÇÁ¶óÀÌÆ® º¯°æ)
+    // UIë¥¼ ì—…ë°ì´íŠ¸í•˜ëŠ” í•¨ìˆ˜ (ì´êµ¬ ìŠ¬ë¡¯ ìŠ¤í”„ë¼ì´íŠ¸ ë³€ê²½)
     void UpdateUI()
     {
         for (int i = 0; i < maxBullets; i++)
         {
-            if (bulletBlockedStatus[i]) // ÇØ´ç ÃÑ±¸ ½½·ÔÀÌ ¸·Çû´Ù¸é
+            if (bulletBlockedStatus[i]) // í•´ë‹¹ ì´êµ¬ ìŠ¬ë¡¯ì´ ë§‰í˜”ë‹¤ë©´
             {
-                bulletSlots[i].sprite = blockedBulletSprite; // ¸·Èù ½ºÇÁ¶óÀÌÆ® (°ËÀº»ö µ¿±×¶ó¹Ì) Ç¥½Ã
+                bulletSlots[i].sprite = blockedBulletSprite; // ë§‰íŒ ìŠ¤í”„ë¼ì´íŠ¸ (ê²€ì€ìƒ‰ ë™ê·¸ë¼ë¯¸) í‘œì‹œ
             }
-            else // ½½·ÔÀÌ ¸·È÷Áö ¾Ê¾Ò´Ù¸é (»ç¿ë °¡´ÉÇÑ ÃÑ±¸¶ó¸é)
+            else // ìŠ¬ë¡¯ì´ ë§‰íˆì§€ ì•Šì•˜ë‹¤ë©´ (ì‚¬ìš© ê°€ëŠ¥í•œ ì´êµ¬ë¼ë©´)
             {
-                bulletSlots[i].sprite = filledBulletSprite; // Ã¤¿öÁø ½ºÇÁ¶óÀÌÆ® Ç¥½Ã
+                bulletSlots[i].sprite = filledBulletSprite; // ì±„ì›Œì§„ ìŠ¤í”„ë¼ì´íŠ¸ í‘œì‹œ
             }
         }
     }
 
-    // ¿ÜºÎ¿¡¼­ ÇöÀç ³²Àº ÃÑ±¸ °³¼ö¸¦ °¡Á®°¡´Â ÇÔ¼ö (ÇÊ¿ä½Ã »ç¿ë)
+    // ì™¸ë¶€ì—ì„œ í˜„ì¬ ë‚¨ì€ ì´êµ¬ ê°œìˆ˜ë¥¼ ê°€ì ¸ê°€ëŠ” í•¨ìˆ˜ (í•„ìš”ì‹œ ì‚¬ìš©)
     public int GetCurrentUsableBullets()
     {
         return currentUsableBullets;

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 10a7b41db1d18584f933d2a4c210c8c7
+guid: 3cbfc811d98e266499f3915d4c162955
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8772761633365852781
-    second: Gate2_0
+      213: -3743100444946370992
+    second: "\uC870\uBA852_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Gate2_0
+      name: "\uC870\uBA852_0"
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 320
-        height: 320
+        x: 4
+        y: 1
+        width: 23
+        height: 70
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 39d7d0846c3e04680800000000000000
-      internalID: -8772761633365852781
+      spriteID: 05e6d542af5dd0cc0800000000000000
+      internalID: -3743100444946370992
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Gate2_0: -8772761633365852781
+      "\uC870\uBA852_0": -3743100444946370992
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: gateExample_0
+  m_Name: "\uC870\uBA851_0"
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 4733728111607894378, guid: 5998b5bc1bf859c45aaa6a581e19ad57, type: 3}
+  m_Sprite: {fileID: -3680320290695874806, guid: 8a06545ab04a5604fad34308cd3af6ad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

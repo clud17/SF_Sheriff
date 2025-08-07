@@ -2,16 +2,13 @@ using UnityEngine;
 
 public class Switch : MonoBehaviour
 {
-    public GameObject[] DownObjects;
+    public GameObject[] MoveObjects;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void TurnSwitch()
     {
-        foreach (GameObject DownObject in DownObjects)
+        foreach (GameObject MoveObject in MoveObjects)
         {
-            SpriteRenderer sr = DownObject.GetComponent<SpriteRenderer>();
-            Vector3 newPosition = DownObject.transform.position;
-            newPosition.y -= sr.bounds.size.y;
-            DownObject.transform.position = newPosition;
+            MoveObject.GetComponent<Gate>().MoveGate(Vector2.down);
         }
 
     }
