@@ -8,7 +8,7 @@ public class PlayerMove : MonoBehaviour
     private float moveSpeed; // 이속
     private float jumpSpeed; // 점프높이
     private float maxJumpTime; // 최대점프시간
-
+    private GameObject lastTouchedObject;
     //isJumping 확인용 필드
     [SerializeField] private LayerMask groundLayer;
 
@@ -147,7 +147,20 @@ public class PlayerMove : MonoBehaviour
         {
             isKnockback = false;
         }
+        if (collision.gameObject.CompareTag("Spike")) // 바닥만 인식
+        {
+            transform.position = lastTouchedObject.transform.position;
+        }
     }
+    // isTrigger 켜놓은 오브젝트 감지용
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Return"))
+        {
+            lastTouchedObject = other.gameObject;
+        }
+    }
+
 
     // 외부에서 넉백 시작할 때 호출
     public void ApplyKnockback(Vector2 force)
@@ -157,5 +170,4 @@ public class PlayerMove : MonoBehaviour
         rb.AddForce(force, ForceMode2D.Impulse);       // 넉백 구현
         Debug.Log("넉백 적용 됨");
     }
-    
 }
