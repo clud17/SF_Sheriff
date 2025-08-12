@@ -108,7 +108,9 @@ public class EnemyAI : MonoBehaviour
     }
     protected virtual IEnumerator EnemyAttack()
     {
+        if (isAttacking) yield break;
         isAttacking = true; // 공격 시작
+        Debug.Log($"{attackCycle}초 후 공격");
         yield return new WaitForSeconds(attackCycle); // 공격 쿨타임 대기 
         isAttacking = false; // 공격 종료
     }
