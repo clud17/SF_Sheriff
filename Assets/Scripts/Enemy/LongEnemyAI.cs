@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class LongEnemyAI : EnemyAI
@@ -19,14 +20,14 @@ public class LongEnemyAI : EnemyAI
         isPlayerDetected = false;
 
         damage = 1.0f; // 공격력 설정
-        attackCooldown = 2.0f; // 공격 쿨타임 설정
+        attackCycle = 2.0f; // 공격 쿨타임 설정
+        isAttacking = false; // 공격 중인지 여부 초기화
         knockbackRange = 2.0f; // 넉백 거리 설정
     }
-    protected override void EnemyAttack()
-    {
-        base.EnemyAttack();
-
-        // ======투사체 생성해서 player랑 충돌하면 넉백===
+    protected override IEnumerator EnemyAttack()
+    {   
+        if (isAttacking) return null; // 이미 공격 중이면 중복 공격 방지
+        // ======투사체 생성해서 player랑 충돌하면 넉백구현해야대 ===
         if (revolverHealthSystem != null)   // 데미지 적용
         {
             // 플레이어의 리볼버 체력 시스템에서 데미지를 적용
@@ -38,5 +39,7 @@ public class LongEnemyAI : EnemyAI
         Vector2 knockback = direction * knockbackRange;
 
         playerMove.ApplyKnockback(knockback);
+        
+        return base.EnemyAttack();
     }
 }

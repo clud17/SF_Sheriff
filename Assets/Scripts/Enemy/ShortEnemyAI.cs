@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ShortEnemyAI : EnemyAI
@@ -19,24 +20,27 @@ public class ShortEnemyAI : EnemyAI
         isPlayerDetected = false;
 
         damage = 1.0f; // 공격력 설정
-        attackCooldown = 2.0f; // 공격 쿨타임 설정
+        attackCycle = 2.0f; // 공격 쿨타임 설정
+        isAttacking = false; // 공격 중인지 여부 초기화
         knockbackRange = 4.0f; // 넉백 거리 설정
     }
-    protected override void EnemyAttack()
+    protected override IEnumerator EnemyAttack()
     {
-        base.EnemyAttack();
+        if (isAttacking) return null; // 이미 공격 중이면 중복 공격 방지
         
         if (revolverHealthSystem != null)   // 데미지 적용
         {
             // 플레이어의 리볼버 체력 시스템에서 데미지를 적용
             revolverHealthSystem.TakeDamage((int)damage * 10); // 나중에 float으로 전환해야돼 RevolverHealthSystem에서 데미지 적용할때
         }
-        
+
         //벡터 계산해서 넉백 적용 근데 공격 애니메이션에 맞춰서 넉백 적용해야함 ==> 조건 달아야할듯
         Vector2 direction = (player.position - transform.position).normalized;
         Vector2 knockback = direction * knockbackRange;
 
         playerMove.ApplyKnockback(knockback);
+        
+        return base.EnemyAttack();
     }
     
 }

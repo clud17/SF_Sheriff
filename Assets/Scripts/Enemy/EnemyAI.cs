@@ -1,3 +1,4 @@
+using System.Collections;
 using System.ComponentModel.Design;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ public class EnemyAI : MonoBehaviour
     protected float moveSpeed;
 
     protected float damage;  // 공격력
-    protected float attackCooldown; // 공격 쿨타임
+    protected float attackCycle; // 공격 쿨타임
+    protected bool isAttacking; // 공격 중인지 여부
     protected float knockbackRange; // 넉백 거리
 
     protected bool isPlayerDetected;
@@ -58,7 +60,11 @@ public class EnemyAI : MonoBehaviour
             {
                 //공격 범위 안이면 멈춤 (공격 준비)
                 StopMovement();
-                EnemyAttack();
+                if (isAttacking == false) // 공격 중이 아니면 공격 시작
+                {
+                    StartCoroutine(EnemyAttack());
+                }
+                
             }
         }
 
@@ -100,8 +106,11 @@ public class EnemyAI : MonoBehaviour
         // patrolTimer = patrolMoveDuration;
         // isPatrolling = true;
     }
-    protected virtual void EnemyAttack()
-    {        
+    protected virtual IEnumerator EnemyAttack()
+    {
+        isAttacking = true; // 공격 시작
+        yield return new WaitForSeconds(attackCycle); // 공격 쿨타임 대기 
+        isAttacking = false; // 공격 종료
     }
 
     void OnDrawGizmosSelected()   // 탐지범위, 공격범위 확인용 gizmos (삭제해도 됨)

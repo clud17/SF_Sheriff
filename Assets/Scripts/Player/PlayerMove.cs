@@ -10,8 +10,8 @@ public class PlayerMove : MonoBehaviour
     private float maxJumpTime; // 최대점프시간
 
     //isJumping 확인용 필드
-    [SerializeField] private LayerMask groundLayer; 
-    
+    [SerializeField] private LayerMask groundLayer;
+
     private Collider2D col;
     private Rigidbody2D rb;
     private Animator anim;
@@ -28,7 +28,7 @@ public class PlayerMove : MonoBehaviour
     private float dashTimer = 0f; // 대시 시간 체크용
     private float lastDashTime = -999f; // Time.time과 함께 쿨다운 체크용
     /*────────────────────────────*/
-    
+
     public bool isKnockback = false; // 넉백 상태 플래그
 
     void Start()
@@ -82,7 +82,7 @@ public class PlayerMove : MonoBehaviour
         if (!isDashing) // 대시 중이 아니라면 기본 이동
         {
             rb.linearVelocity = new Vector2(moveX * moveSpeed, rb.linearVelocity.y);
-            
+
         }
         else // 대시 중이면
         {
@@ -96,7 +96,7 @@ public class PlayerMove : MonoBehaviour
                 rb.gravityScale = 2f;
             }
         }
-        
+
     }
     //점프 기능
     private void HandleJump()
@@ -128,7 +128,7 @@ public class PlayerMove : MonoBehaviour
             isJumping = false;
         }
     }
-    
+
     private bool IsGrounded()
     {
         float offsetY = -(col.bounds.extents.y + 0.1f); // 발끝에서 살짝 아래
@@ -157,5 +157,5 @@ public class PlayerMove : MonoBehaviour
         rb.AddForce(force, ForceMode2D.Impulse);       // 넉백 구현
         Debug.Log("넉백 적용 됨");
     }
-
+    
 }
