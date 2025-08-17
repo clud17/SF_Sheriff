@@ -9,6 +9,7 @@ TagManager:
   - Switch
   - Return
   - Spike
+  - EnemyAttack
   layers:
   - Default
   - TransparentFX

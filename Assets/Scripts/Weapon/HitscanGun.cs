@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 using static UnityEngine.Rendering.DebugUI.Table;
 public class HitScanGun : BaseGun
 {
@@ -24,26 +25,22 @@ public class HitScanGun : BaseGun
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - tip.position).normalized;
-        RaycastHit2D hit = Physics2D.Raycast(tip.position, direction, 30f);
+        RaycastHit2D[] hit = Physics2D.RaycastAll(tip.position, direction, 30f);        // RaycastAll을 사용하여 여러 충돌체를 감지
         // 히트스캔을 위한 레이캐스트 총구(tip), 방향, 최대거리(30f), layerMask(enemy) 설정
 
         BulletBase now = WC.myBulletObj[gundata.currentAmmo].GetComponent<BulletBase>();
-
-        if (hit.collider != null)
+        int i=0;
+        for (i = 0; i < hit.Length; i++)
         {
-            DrawTracer(now, tip.position, direction, hit.distance);
+            RaycastHit2D hitinfo = hit[i];
+            now.Hitscan(hit[i]); // 충돌 처리 메소드 호출
+            break; // 관통탄이면 break가 아니라 continue 되게 해야 함.
         }
-        else
-        {
-            DrawTracer(now, tip.position, direction, 30f); // 맞은 대상이 없으면 최대 거리로 궤적 그리기
-        }
-
-
+        DrawTracer(now, tip.position, direction, hit.Length==0?30f:hit[i].distance);
         Debug.DrawRay(tip.position, direction * 100f, Color.red, 1f);
+        
 
         gundata.currentAmmo--;
-
-        now.Hitscan(hit);
     }
     public override IEnumerator DelayedShoot(GameObject player, Transform tip)
     {

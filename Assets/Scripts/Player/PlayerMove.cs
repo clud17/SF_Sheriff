@@ -50,16 +50,19 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isKnockback) return; //넉백중이면 이동X
-        moveX = Input.GetAxisRaw("Horizontal");  // 좌우 이동 입력
+        moveX = 0f;
+        if (!isKnockback)
+        { //넉백중이면 이동X
+            moveX = Input.GetAxisRaw("Horizontal");  // 좌우 이동 입력
 
-        if (moveX < 0) // 좌측 이동
-        {
-            sprend.transform.localScale = new Vector3(-1f, 1f, 1f); // 좌측 이동시 스프라이트 반전
-        }
-        else if (moveX > 0) // 우측 이동
-        {
-            sprend.transform.localScale = new Vector3(1f, 1f, 1f); // 우측 이동시 스프라이트 원래대로
+            if (moveX < 0) // 좌측 이동
+            {
+                sprend.transform.localScale = new Vector3(-1f, 1f, 1f); // 좌측 이동시 스프라이트 반전
+            }
+            else if (moveX > 0) // 우측 이동
+            {
+                sprend.transform.localScale = new Vector3(1f, 1f, 1f); // 우측 이동시 스프라이트 원래대로
+            }
         }
         HandleMovement();
         HandleJump();
