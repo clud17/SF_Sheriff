@@ -50,27 +50,27 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveX = 0f;
-        if (!isKnockback)
-        { //넉백중이면 이동X
-            moveX = Input.GetAxisRaw("Horizontal");  // 좌우 이동 입력
-
-            if (moveX < 0) // 좌측 이동
-            {
-                sprend.transform.localScale = new Vector3(-1f, 1f, 1f); // 좌측 이동시 스프라이트 반전
-            }
-            else if (moveX > 0) // 우측 이동
-            {
-                sprend.transform.localScale = new Vector3(1f, 1f, 1f); // 우측 이동시 스프라이트 원래대로
-            }
+        if (!isKnockback) // 넉백중이 아닐때만 이동및 대시 점프 구현
+        {
+            HandleMovement();
+            HandleJump();
+            //...
         }
-        HandleMovement();
-        HandleJump();
+        HandleDashTimer(); // 대시타이머는 언제든지 흘러감
     }
     //좌우이동 및 대시 기능
     private void HandleMovement()
     {
-        // float moveX = Input.GetAxisRaw("Horizontal");
+        float moveX = Input.GetAxisRaw("Horizontal");
+        if (moveX < 0) // 좌측 이동
+        {
+            sprend.transform.localScale = new Vector3(-1f, 1f, 1f); // 좌측 이동시 스프라이트 반전
+        }
+        else if (moveX > 0) // 우측 이동
+        {
+            sprend.transform.localScale = new Vector3(1f, 1f, 1f); // 우측 이동시 스프라이트 원래대로
+        }
+
         if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown && IsGrounded())
         {
             isDashing = true;
@@ -81,15 +81,17 @@ public class PlayerMove : MonoBehaviour
             rb.gravityScale = 0f; // 공중에서도 평평하게 대시하기 위해
             rb.linearVelocity = new Vector2(moveX * dashSpeed, 0f);
         }
-
-        if (!isDashing) // 대시 중이 아니라면 기본 이동
+        if (!isDashing) // 대시 중 이동 방지
         {
             rb.linearVelocity = new Vector2(moveX * moveSpeed, rb.linearVelocity.y);
-
         }
+        moveX = 0f;
+    }
+    private void HandleDashTimer() //
+    {
+        if (!isDashing){return;}
         else // 대시 중이면
         {
-
             dashTimer -= Time.deltaTime;
             if (dashTimer <= 0)
             {
@@ -99,7 +101,6 @@ public class PlayerMove : MonoBehaviour
                 rb.gravityScale = 2f;
             }
         }
-
     }
     //점프 기능
     private void HandleJump()

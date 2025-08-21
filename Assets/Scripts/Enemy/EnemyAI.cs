@@ -9,13 +9,14 @@ public class EnemyAI : MonoBehaviour
     protected float attackRange;
     protected float moveSpeed;
 
-    protected float damage;  // 공격력
+    protected int damage;  // 공격력
     protected float attackCycle; // 공격 쿨타임
     protected bool isAttacking; // 공격 중인지 여부
     protected float knockbackRange; // 넉백 거리
 
     protected bool isPlayerDetected;
     
+    private Animator EnemyAnimator;
     protected Health HP;
     
     protected virtual void Init() // 자식이 호출하는 메소드
@@ -24,6 +25,7 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         Init(); // 초기화 메소드 호출
+        EnemyAnimator = GetComponent<Animator>();
     }
 
     protected virtual void Update()
@@ -52,7 +54,7 @@ public class EnemyAI : MonoBehaviour
         if (isPlayerDetected)
         {
             //공격 범위보다 멀면 이동
-            if (distanceToPlayer > attackRange)
+            if (distanceToPlayer > attackRange && isAttacking == false)
             {
                 MoveTowardsPlayer();
             }
@@ -110,8 +112,11 @@ public class EnemyAI : MonoBehaviour
     {
         if (isAttacking) yield break;
         isAttacking = true; // 공격 시작
+        EnemyAnimator.SetBool("isAttacking", true);
+        
         Debug.Log($"{attackCycle}초 후 공격");
-        yield return new WaitForSeconds(attackCycle); // 공격 쿨타임 대기 
+        yield return new WaitForSeconds(attackCycle); // 공격 쿨타임 대기
+        EnemyAnimator.SetBool("isAttacking", false);
         isAttacking = false; // 공격 종료
     }
 

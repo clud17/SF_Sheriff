@@ -1,4 +1,4 @@
-// CinemachineManagerDDOL.cs
+// 카메라 이동
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,7 +17,7 @@ public class CinemachineManagerDDOL : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
-        DontDestroyOnLoad(gameObject); // 씬이 바뀌어도 살아남기
+        DontDestroyOnLoad(gameObject); // 쒥뚧렑엝뷂짋갉곩싪엂
 
     }
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)

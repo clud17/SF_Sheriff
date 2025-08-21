@@ -18,7 +18,7 @@ public class LongEnemyAI : EnemyAI
         moveSpeed = 3.0f;
         isPlayerDetected = false;
 
-        damage = 1.0f; // 공격력 설정
+        damage = 1; // 공격력 설정
         attackCycle = 2.0f; // 공격 쿨타임 설정
         isAttacking = false; // 공격 중인지 여부 초기화
         knockbackRange = 2.0f; // 넉백 거리 설정
@@ -40,7 +40,7 @@ public class LongEnemyAI : EnemyAI
         // 적군 총 발사
         spawnedBullet.GetComponent<EnemyBullet>().EnemyShoot(ToPlayerdirection);
         // 넉백 값 전달하기
-        spawnedBullet.GetComponent<EnemyBullet>().GetKnockBackRange(knockbackRange);
+        spawnedBullet.GetComponent<EnemyBullet>().GetValue(knockbackRange, damage);
         
         yield return base.EnemyAttack();
     }

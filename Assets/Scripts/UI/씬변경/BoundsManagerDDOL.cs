@@ -1,5 +1,5 @@
-// BoundsManagerDDOL.cs (¿¹½Ã)
-using UnityEngine;
+
+using UnityEngine; //ì¹´ë©”ë¼ ë°”ìš´ë“œ
 
 public class BoundsManagerDDOL : MonoBehaviour
 {

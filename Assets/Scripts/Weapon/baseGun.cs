@@ -6,7 +6,7 @@ using UnityEngine;
 
 public struct Data
 {
-    public float fireRate;      // 발사 간격
+    public float fireRate;       // 발사 간격
     public float nextFireTime; // 총알 발사 딜레이
     public bool isCharging;
     public bool isReloading; // 재장전 중인지 아닌지
@@ -23,14 +23,17 @@ public struct Data
 public abstract class BaseGun : MonoBehaviour
 {
     public Data gundata; // 총의 데이터 구조체
-    public WeaponController WC;
+    public WeaponController WC; // WeaponController 참조 (이 변수를 사용하지 않을 경우 제거할 수 있습니다)
+
     public virtual void InitSetting()
     {
         gundata.isCharging = false;
         gundata.isReloading = false; // 재장전 중인지 아닌지
         gundata.maxHP = 6; // 최대 체력
         gundata.currentHP = gundata.maxHP; // 현재 체력을 최대 체력으로 초기화
-        gundata.currentAmmo = gundata.currentHP; // 현재 탄약을 현재 체력으로 초기화
+        // gundata.currentAmmo는 WeaponController에서 RevolverHealthSystem을 통해 초기화/관리됩니다.
+        // g250731: BaseGun 내부에서 currentAmmo를 초기화하는 대신, WeaponController가 관리하도록 합니다.
+        // gundata.currentAmmo = gundata.currentHP; 
     }
 
     public abstract void Fire(GameObject player, Transform tip);
@@ -42,7 +45,9 @@ public abstract class BaseGun : MonoBehaviour
         yield return new WaitForSeconds(gundata.AmmoreloadTime);
         Debug.Log("장전 완료");
 
-        gundata.currentAmmo = gundata.currentHP; // 현재 체력을 현재 탄창으로
+        // g250731: 현재 탄약 수(currentAmmo)는 RevolverHealthSystem에서 가져온 값으로
+        // WeaponController에서 업데이트하도록 합니다. BaseGun은 재장전 '동작'만 수행합니다.
+        // gundata.currentAmmo = gundata.currentHP; // 현재 체력을 현재 탄창으로 
 
         gundata.isReloading = false;
     }

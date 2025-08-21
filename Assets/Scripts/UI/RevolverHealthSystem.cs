@@ -1,56 +1,68 @@
 using UnityEngine;
-using UnityEngine.UI; // UI 요소를 사용하기 위해 필요
+using UnityEngine.UI;
 
 public class RevolverHealthSystem : MonoBehaviour
 {
     [Header("체력 설정")]
-    public int maxHealth = 60; // 최대 체력 (총알 슬롯 개수 * 10으로 생각, 예: 60)
-    private int currentHealth; // 현재 플레이어의 체력
+    public int maxHealth; // 최대 체력 (총알 슬롯 개수 * 10으로 생각, 예: 60)
+    public int currentHealth; // 현재 플레이어의 체력 (public으로 수정하여 외부 스크립트에서 접근 가능하도록 함)
 
     [Header("총알 설정")]
-    public int maxBullets = 6; // 리볼버의 최대 총알 슬롯 개수 (총구 개수)
-    private int currentUsableBullets; // 현재 총을 쏠 수 있는 (막히지 않은) 총알 슬롯 개수
-    private bool[] bulletBlockedStatus; // 각 총알 슬롯이 막혔는지 여부를 저장할 배열 (true = 막힘)
+    public int maxBullets; // 리볼버의 최대 총알 슬롯 개수 (총구 개수)
+    private int currentUsableBullets; // 데미지로 인해 막히지 않은 총알 슬롯 개수
+    private bool[] bulletBlockedStatus; // 각 총알 슬롯이 막혔는지 여부
+    private bool[] bulletFiredStatus;    // 각 총알 슬롯이 발사되었는지 여부
 
+    // 기존 주석 유지: [Header("UI 연결")]
     [Header("UI 연결")]
-    // 인스펙터에서 순서대로 총알 슬롯 UI Image를 할당해야 합니다 (예: bulletSlot1, bulletSlot2...)
     public Image[] bulletSlots;
-    public Sprite filledBulletSprite;   // 총알이 채워진 스프라이트 (시작 시)
-    public Sprite blockedBulletSprite;  // 총구가 막혔을 때의 스프라이트 (데미지 시)
+    public Sprite filledBulletSprite;
+    public Sprite blockedBulletSprite;
+    public Sprite emptyBulletSprite;
 
-    // 초기화
-    void Start()
+    // 초기화: Awake에서 변수와 배열을 모두 초기화합니다.
+    void Awake()
     {
-        currentHealth = maxHealth; // 체력을 최대로 설정
-        currentUsableBullets = maxBullets; // 시작 시 모든 총구가 사용 가능 (막히지 않음)
+        maxHealth = 6;
+        maxBullets = 6;
+        currentHealth = maxHealth;
+        currentUsableBullets = maxBullets;
 
-        // 각 총알 슬롯의 막힘 상태를 초기화 (모두 '막히지 않음' 상태로 시작)
         bulletBlockedStatus = new bool[maxBullets];
+        bulletFiredStatus = new bool[maxBullets];
+
         for (int i = 0; i < maxBullets; i++)
         {
-            bulletBlockedStatus[i] = false; // 기본적으로 막히지 않은 상태
+            bulletBlockedStatus[i] = false;
+            bulletFiredStatus[i] = false;
         }
 
-        UpdateUI(); // 시작 시 UI를 초기 상태(모두 채워진 총구)로 업데이트
+        UpdateUI();
+    }
+
+    public void Shoot()
+    {
+        Debug.Log("총을 쏘는 기능은 아직 구현되지 않았습니다.");
     }
 
     // 데미지를 받는 함수
     public void TakeDamage(int damage)
     {
+        Debug.Log("take damage 호출======");
         currentHealth -= damage; // 현재 체력에서 데미지 감소
-
+        
         // 체력이 0 미만으로 내려가지 않도록 보정
-        if (currentHealth < 0)
-        {
-            currentHealth = 0;
-        }
+            if (currentHealth < 0)
+            {
+                currentHealth = 0;
+            }
 
         // --- 핵심 로직: 체력에 따라 총알 슬롯 막기 (검은색 스프라이트로 변경) ---
-        // 총알 1개당 필요한 체력(데미지) 단위 계산 (예: 60 / 6 = 10 데미지당 총알 1개)
-        int healthPerBullet = maxHealth / maxBullets;
+        // // 총알 1개당 필요한 체력(데미지) 단위 계산 (예: 60 / 6 = 10 데미지당 총알 1개)
+        // int healthPerBullet = maxHealth / maxBullets;
 
         // 현재 체력으로 총을 쏠 수 있는 최대 총알 슬롯 개수 계산
-        int newUsableBulletCount = Mathf.CeilToInt((float)currentHealth / healthPerBullet);
+        int newUsableBulletCount = currentHealth;
 
         // 현재 쏠 수 있는 총알 개수가 줄어들었다면 (즉, 데미지를 받아 총구가 막혀야 한다면)
         if (newUsableBulletCount < currentUsableBullets)
@@ -75,71 +87,95 @@ public class RevolverHealthSystem : MonoBehaviour
         UpdateUI(); // UI 업데이트 함수 호출 (막힌 총구를 검은색 스프라이트로 변경)
     }
 
-    // 체력을 회복하는 함수
     public void Heal(int amount)
     {
-        currentHealth += amount; // 현재 체력에 회복량 추가
+        currentHealth += amount;
+        if (currentHealth > maxHealth) currentHealth = maxHealth;
 
-        // 체력이 최대 체력을 넘지 않도록 보정
-        if (currentHealth > maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
-
-        // --- 핵심 로직: 체력 회복에 따라 막힌 총구 다시 활성화 ---
-        // 총알 1개당 필요한 체력(데미지) 단위 계산
-        int healthPerBullet = maxHealth / maxBullets;
-
-        // 현재 체력으로 총을 쏠 수 있는 최대 총알 슬롯 개수 계산
-        int newUsableBulletCount = Mathf.CeilToInt((float)currentHealth / healthPerBullet);
-
-        // 현재 쏠 수 있는 총알 개수가 늘어났다면 (즉, 체력을 회복하여 총구를 활성화해야 한다면)
+        // int healthPerBullet = maxHealth / maxBullets;
+        int newUsableBulletCount = currentHealth;
+        
         if (newUsableBulletCount > currentUsableBullets)
         {
-            // 늘어난 개수만큼 총알 슬롯을 앞에서부터 활성화 (bulletBlockedStatus를 false로 설정)
-            // 즉, 막혔던 총구를 다시 채워진 상태로 되돌림
-            for (int i = currentUsableBullets; i < newUsableBulletCount; i++) // 주의: currentUsableBullets부터 시작
+            for (int i = currentUsableBullets; i < newUsableBulletCount; i++)
             {
-                if (i < maxBullets) // 배열 범위를 벗어나지 않도록 확인
+                if (i < maxBullets)
                 {
-                    bulletBlockedStatus[i] = false; // 해당 슬롯을 막히지 않은 상태로 설정
+                    bulletBlockedStatus[i] = false;
                 }
             }
-            currentUsableBullets = newUsableBulletCount; // 쏠 수 있는 총알 개수 업데이트
-
+            currentUsableBullets = newUsableBulletCount;
             Debug.Log($"체력 회복으로 총구 슬롯이 {currentUsableBullets}개 남았습니다.");
         }
-
-        UpdateUI(); // UI 업데이트 함수 호출 (막힌 총구가 다시 채워진 스프라이트로 변경)
+        UpdateUI();
     }
 
-
-    // 총을 쏘는 함수 (현재는 데미지/회복 테스트에 집중)
-    public void Shoot()
+    public void MarkBulletAsFired()
     {
-        Debug.Log("총을 쏘는 기능은 아직 구현되지 않았습니다. 데미지/회복 테스트에 집중합니다.");
-        // 나중에 총을 쏘는 로직이 여기에 추가됩니다.
+        for (int i = maxBullets - 1; i >= 0; i--)
+        {
+            if (!bulletBlockedStatus[i] && !bulletFiredStatus[i])
+            {
+                bulletFiredStatus[i] = true;
+                UpdateUI();
+                return;
+            }
+        }
+        Debug.LogWarning("모든 총알이 발사되었거나 막혀있습니다.");
     }
 
-    // UI를 업데이트하는 함수 (총구 슬롯 스프라이트 변경)
+    public void ResetFiredBullets()
+    {
+        for (int i = 0; i < maxBullets; i++)
+        {
+            if (!bulletBlockedStatus[i])
+            {
+                bulletFiredStatus[i] = false;
+            }
+        }
+        UpdateUI();
+    }
+
     void UpdateUI()
     {
         for (int i = 0; i < maxBullets; i++)
         {
-            if (bulletBlockedStatus[i]) // 해당 총구 슬롯이 막혔다면
+            if (bulletBlockedStatus[i])
             {
-                bulletSlots[i].sprite = blockedBulletSprite; // 막힌 스프라이트 (검은색 동그라미) 표시
+                bulletSlots[i].sprite = blockedBulletSprite;
             }
-            else // 슬롯이 막히지 않았다면 (사용 가능한 총구라면)
+            else if (bulletFiredStatus[i])
             {
-                bulletSlots[i].sprite = filledBulletSprite; // 채워진 스프라이트 표시
+                bulletSlots[i].sprite = emptyBulletSprite;
+            }
+            else
+            {
+                bulletSlots[i].sprite = filledBulletSprite;
             }
         }
     }
 
-    // 외부에서 현재 남은 총구 개수를 가져가는 함수 (필요시 사용)
     public int GetCurrentUsableBullets()
     {
         return currentUsableBullets;
+    }
+
+    public int GetCurrentAvailableBulletsForFiring()
+    {
+        if (bulletBlockedStatus == null || bulletFiredStatus == null)
+        {
+            Debug.LogError("총알 상태 배열이 초기화되지 않았습니다. RevolverHealthSystem의 Awake() 함수를 확인해주세요.");
+            return 0;
+        }
+
+        int count = 0;
+        for (int i = 0; i < maxBullets; i++)
+        {
+            if (!bulletBlockedStatus[i] && !bulletFiredStatus[i])
+            {
+                count++;
+            }
+        }
+        return count;
     }
 }

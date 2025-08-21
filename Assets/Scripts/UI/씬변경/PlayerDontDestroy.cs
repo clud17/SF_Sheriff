@@ -1,26 +1,26 @@
 using UnityEngine;
-using UnityEngine.SceneManagement; // SceneManager »ç¿ëÀ» À§ÇØ Ãß°¡
+using UnityEngine.SceneManagement; // SceneManager ì‚¬ìš©ì„ ìœ„í•´ ì¶”ê°€ê°€
 
 public class PlayerDontDestroy : MonoBehaviour
 {
-    public static PlayerDontDestroy Instance; // ½Ì±ÛÅæ ÀÎ½ºÅÏ½º
+    public static PlayerDontDestroy Instance; // ì‹±ê¸€í†¤ ì¸ìŠ¤í„´ìŠ¤
 
     private void Awake()
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject); // ÀÌ¹Ì ÀÎ½ºÅÏ½º°¡ ÀÖ´Ù¸é ÀÚ½ÅÀ» ÆÄ±«
+            Destroy(gameObject); // ì´ë¯¸ ì¸ìŠ¤í„´ìŠ¤ê°€ ìˆë‹¤ë©´ ìì‹ ì„ íŒŒê´´
             return;
         }
 
-        Instance = this; // ÀÌ ÀÎ½ºÅÏ½º¸¦ À¯ÀÏÇÑ ÀÎ½ºÅÏ½º·Î ¼³Á¤
-        DontDestroyOnLoad(gameObject); // ¾À º¯°æ ½Ã ÆÄ±«µÇÁö ¾Êµµ·Ï ¼³Á¤
+        Instance = this; // ì´ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ìœ ì¼í•œ ì¸ìŠ¤í„´ìŠ¤ë¡œ ì„¤ì •
+        DontDestroyOnLoad(gameObject); // ì”¬ ë³€ê²½ ì‹œ íŒŒê´´ë˜ì§€ ì•Šë„ë¡ ì„¤ì •
 
-        // ¾À ·Îµå ÀÌº¥Æ® ±¸µ¶ (»õ ¾À¿¡¼­ ÇÃ·¹ÀÌ¾î À§Ä¡ Àç¼³Á¤À» À§ÇÔ)
+        // ì”¬ ë¡œë“œ ì´ë²¤íŠ¸ êµ¬ë… (ìƒˆ ì”¬ì—ì„œ í”Œë ˆì´ì–´ ìœ„ì¹˜ ì¬ì„¤ì •ì„ ìœ„í•¨)
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    // ¿ÀºêÁ§Æ®°¡ ÆÄ±«µÉ ¶§ ÀÌº¥Æ® ±¸µ¶ ÇØÁö
+    // ì˜¤ë¸Œì íŠ¸ê°€ íŒŒê´´ë  ë•Œ ì´ë²¤íŠ¸ êµ¬ë… í•´ì§€
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;

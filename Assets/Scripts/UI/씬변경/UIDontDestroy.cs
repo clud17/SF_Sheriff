@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class UIDontDestroy : MonoBehaviour
 {
-    public static UIDontDestroy Instance; // 싱글톤 인스턴스
+    public static UIDontDestroy Instance; // 싱글톤 인스턴스스
 
     private void Awake()
     {
@@ -14,5 +14,12 @@ public class UIDontDestroy : MonoBehaviour
 
         Instance = this; // 이 인스턴스를 유일한 인스턴스로 설정
         DontDestroyOnLoad(gameObject); // 씬 변경 시 파괴되지 않도록 설정
+    }
+    /// <summary>
+    /// Start is called on the frame when a script is enabled just before
+    /// any of the Update methods is called the first time.
+    /// </summary>
+    void Start()
+    {
     }
 }

@@ -10,14 +10,17 @@ public class WeaponController : MonoBehaviour
     public Transform tip; // 총알 발사 위치
 
     public GameObject[] myBulletObj = new GameObject[7];
-
     public BulletData[] myBulletData = new BulletData[7];
     //250717 추가된 코드
 
     public GameObject[] bulletPrefabs;
     public BulletData[] bulletDatas;
 
-    // 사운드
+
+    //250731 체력♡총알
+    public RevolverHealthSystem revolverHealthSystem; // 체력 스크립트와 연결
+
+
     void Start()
     {
         /// Start() 메소드
@@ -26,7 +29,7 @@ public class WeaponController : MonoBehaviour
         /// 따라서 총알 바꾸는 기능 도입되면 여기 말고 baseGun.총알변경(배열[7]) 쓰는 게 좋아보임
 
         // 기본 탄환의 종류를 지정하는 배열. 0: 기본, 1: charge(바꿔야함 우클릭에만 적용되게), 2: 관통 등등. 나중에 휴식을 할 때, 바꿀수 있어야함
-        int[] startBullet = { 1, 3, 1, 3, 3, 1 }; // ABCDEF.      //(수정 필 : 나중에 업데이트 할 수 있게 gundata에 넣는다??)
+        int[] startBullet = { 1, 3, 1, 3, 3, 1 }; // ABCDEF.       //(수정 필 : 나중에 업데이트 할 수 있게 gundata에 넣는다??)
         for (int i = 6; i >= 1; i--) // 기본 탄환 6개.
         {
             myBulletObj[7 - i] = bulletPrefabs[startBullet[i - 1]];
@@ -37,7 +40,23 @@ public class WeaponController : MonoBehaviour
         myBulletObj[0] = bulletPrefabs[0]; // bulletPrefabs[0] 
         myBulletData[0] = bulletDatas[startBullet[0]];
         currentGun.InitSetting(); // 총 초기화 설정
-        
+
+        // aud = GetComponent<AudioSource>(); // AudioManager.Instance를 사용하므로 필요 없습니다.
+
+        //250731 RevolverHealthSystem 연결
+        // RevolverHealthSystem이 할당되었는지 확인하고, 없으면 씬에서 찾습니다.
+        if (revolverHealthSystem == null)
+        {
+            revolverHealthSystem = FindObjectOfType<RevolverHealthSystem>();
+            if (revolverHealthSystem == null)
+            {
+                Debug.LogError("RevolverHealthSystem이 WeaponController에 할당되지 않았거나 씬에서 찾을 수 없습니다. 수동으로 할당해주세요.");
+                enabled = false; // 스크립트 비활성화
+                return;
+            }
+        }
+        // 시작 시 현재 총알 수를 RevolverHealthSystem의 현재 발사 가능한 총알 수로 설정
+        currentGun.gundata.currentAmmo = revolverHealthSystem.GetCurrentAvailableBulletsForFiring();
     }
 
 
@@ -45,37 +64,94 @@ public class WeaponController : MonoBehaviour
     {
         if (currentGun.gundata.isReloading) return; // 재장전 중이면 아무것도 하지 않음
 
+        // 250731 RevolverHealthSystem 연결
+        // RevolverHealthSystem에서 현재 발사 가능한 총알 수를 가져와 업데이트
+        int availableBulletsToFire = revolverHealthSystem.GetCurrentAvailableBulletsForFiring();
+
+        // 만약 currentGun의 현재 총알 수가 RevolverHealthSystem에서 알려주는 발사 가능한 총알 수보다 많다면,
+        // (예: 데미지를 받아 총구 수가 줄었는데 아직 발사하지 않은 경우)
+        // currentGun의 총알 수를 맞춰줍니다.
+        if (currentGun.gundata.currentAmmo > availableBulletsToFire)
+        {
+            currentGun.gundata.currentAmmo = availableBulletsToFire;
+        }
+        //250731 RevolverHealthSystem 연결을 위한 추가 코드 끝
+
         if (Input.GetMouseButtonDown(0) && Time.time >= currentGun.gundata.nextFireTime)
         { //좌클릭 코드 구현
-            if (currentGun.gundata.currentAmmo == 0) Debug.Log("need to reload"); //현재탄환 큐가 비어있으면
-            else // 탄약이 있으면
+            // 체력연결용
+            if (currentGun.gundata.currentAmmo <= 0) // 총알이 0개 이하일 경우 바로 재장전 필요 메시지를 띄움
             {
-                currentGun.Fire(player, tip); // 발사
-                AudioManager.Instance.PlaySound(AudioManager.Instance.ShootingSound); // 총기 발사 사운드 재생
-                Debug.Log($"{currentGun.gundata.currentAmmo}");
-                currentGun.gundata.nextFireTime = Time.time + currentGun.gundata.fireRate;  // 발사 주기를 관리하기 위해
+                Debug.Log("need to reload");
+                return;
             }
+
+            currentGun.Fire(player, tip); // 발사
+            AudioManager.Instance.PlaySound(AudioManager.Instance.ShootingSound); // 총기 발사 사운드 재생
+
+            // 250731 총알 발사 중복 해결: 총알 수 감소는 WeaponController에서만 처리하도록 수정
+            revolverHealthSystem.MarkBulletAsFired(); // RevolverHealthSystem에 총알 발사 알림 (UI 업데이트)
+            currentGun.gundata.currentAmmo--; // 현재 총알 수 감소
+
+            Debug.Log($"{currentGun.gundata.currentAmmo}");
+            currentGun.gundata.nextFireTime = Time.time + currentGun.gundata.fireRate;  // 발사 주기를 관리하기 위해
         }
+
+        
+        // 기존의 ReloadAmmo()와 ResetFiredBullets()를 분리하지 않고
+        // 하나의 코루틴에서 순차적으로 처리하여 -1 오류를 방지
         if (Input.GetMouseButtonDown(1))
         { // 우클릭 코드 구현
-            if (currentGun.gundata.currentAmmo == 0) Debug.Log("need to reload");
-            else
+            if (!currentGun.gundata.isReloading)
             {
-                StartCoroutine(currentGun.DelayedShoot(player, tip));
-                AudioManager.Instance.PlaySound(AudioManager.Instance.ChargeSound);
-                Debug.Log($"{currentGun.gundata.currentAmmo}");
-                AudioManager.Instance.PlaySound(AudioManager.Instance.ReloadSound);
-                StartCoroutine(currentGun.ReloadAmmo());  // 우클릭시 남은 총알 관계없이 재장전
+                StartCoroutine(ReloadAndSyncAmmo());
             }
         }
         if (Input.GetKeyUp(KeyCode.R))
-        {
-            // 짧게 눌렀을 경우 → 총알 재장전
+        { // R 키 재장전
             if (!currentGun.gundata.isReloading)
             {
-                StartCoroutine(currentGun.ReloadAmmo());
-                AudioManager.Instance.PlaySound(AudioManager.Instance.ReloadSound); // 재장전 사운드 재생
+                StartCoroutine(ReloadAndSyncAmmo());
             }
         }
+        
+    }
+
+    // --- 추가된 재장전 동기화 코루틴 시작 ---
+    // 재장전이 끝난 후에 총알 수를 UI와 동기화하여 -1 오류를 방지함
+    private IEnumerator ReloadAndSyncAmmo()
+    {
+        if (currentGun.gundata.isReloading) yield break;
+
+        AudioManager.Instance.PlaySound(AudioManager.Instance.ReloadSound);
+
+        // BaseGun의 재장전 코루틴이 완료될 때까지 대기
+        yield return StartCoroutine(currentGun.ReloadAmmo());
+
+        // 재장전이 완료된 후, RevolverHealthSystem의 발사된 총알 상태를 리셋
+        revolverHealthSystem.ResetFiredBullets();
+
+        // UI와 동기화된 총알 수를 가져와 currentAmmo에 정확히 설정
+        int newAvailableBullets = revolverHealthSystem.GetCurrentAvailableBulletsForFiring();
+        currentGun.gundata.currentAmmo = newAvailableBullets;
+
+        Debug.Log($"재장전 완료! 현재 발사 가능 총알: {currentGun.gundata.currentAmmo}");
+    }
+    // --- 추가된 재장전 동기화 코루틴 끝 ---
+
+    //250731 체력
+    // 외부에서 데미지를 받을 때 호출될 메서드
+    public void OnTakeDamage(int damage)
+    {
+        revolverHealthSystem.TakeDamage(damage); // RevolverHealthSystem에 데미지 처리 위임
+
+        // 데미지를 받아 총구 슬롯이 막혔을 경우, 현재 총알 수가 막힌 슬롯보다 많으면 줄어듬.
+        int newAvailableBullets = revolverHealthSystem.GetCurrentAvailableBulletsForFiring();
+        if (currentGun.gundata.currentAmmo > newAvailableBullets)
+        {
+            currentGun.gundata.currentAmmo = newAvailableBullets;
+        }
+
+        Debug.Log($"총구 {revolverHealthSystem.maxBullets - revolverHealthSystem.GetCurrentUsableBullets()}개 파괴됨. 남은 총구: {revolverHealthSystem.GetCurrentUsableBullets()}");
     }
 }
