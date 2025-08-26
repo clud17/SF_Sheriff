@@ -6,10 +6,10 @@ public class EnemyAI : MonoBehaviour
 {
     protected Transform player;
     protected float detectionRange;
-    protected float attackRange;
+    public float attackRange;
     protected float moveSpeed;
 
-    protected int damage;  // 공격력
+    public int damage;  // 공격력
     protected float attackCycle; // 공격 쿨타임
     protected bool isAttacking; // 공격 중인지 여부
     protected float knockbackRange; // 넉백 거리
@@ -18,7 +18,7 @@ public class EnemyAI : MonoBehaviour
     
     private Animator EnemyAnimator;
     protected Health HP;
-    
+    private SpriteRenderer Enemysprend;
     protected virtual void Init() // 자식이 호출하는 메소드
     {}
 
@@ -26,6 +26,7 @@ public class EnemyAI : MonoBehaviour
     {
         Init(); // 초기화 메소드 호출
         EnemyAnimator = GetComponent<Animator>();
+        Enemysprend = GetComponent<SpriteRenderer>();
     }
 
     protected virtual void Update()
@@ -53,6 +54,8 @@ public class EnemyAI : MonoBehaviour
         //플레이어를 탐지했으면 행동 시작
         if (isPlayerDetected)
         {
+            Enemysprend.transform.localScale = new Vector3(player.transform.position.x < transform.position.x ? 1f : -1f, 1f, 1f);
+
             //공격 범위보다 멀면 이동
             if (distanceToPlayer > attackRange && isAttacking == false)
             {
@@ -66,7 +69,7 @@ public class EnemyAI : MonoBehaviour
                 {
                     StartCoroutine(EnemyAttack());
                 }
-                
+
             }
         }
 
