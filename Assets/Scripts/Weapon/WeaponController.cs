@@ -64,7 +64,7 @@ public class WeaponController : MonoBehaviour
     {
         if (currentGun.gundata.isReloading) return; // 재장전 중이면 아무것도 하지 않음
 
-        // 250731 RevolverHealthSystem 연결
+        //RevolverHealthSystem 연결
         // RevolverHealthSystem에서 현재 발사 가능한 총알 수를 가져와 업데이트
         int availableBulletsToFire = revolverHealthSystem.GetCurrentAvailableBulletsForFiring();
 
@@ -75,7 +75,7 @@ public class WeaponController : MonoBehaviour
         {
             currentGun.gundata.currentAmmo = availableBulletsToFire;
         }
-        //250731 RevolverHealthSystem 연결을 위한 추가 코드 끝
+        //RevolverHealthSystem 연결을 위한 추가 코드 끝
 
         if (Input.GetMouseButtonDown(0) && Time.time >= currentGun.gundata.nextFireTime)
         { //좌클릭 코드 구현
@@ -89,7 +89,7 @@ public class WeaponController : MonoBehaviour
             currentGun.Fire(player, tip); // 발사
             AudioManager.Instance.PlaySound(AudioManager.Instance.ShootingSound); // 총기 발사 사운드 재생
 
-            // 250731 총알 발사 중복 해결: 총알 수 감소는 WeaponController에서만 처리하도록 수정
+            //총알 수 감소는 WeaponController에서만 처리하도록 수정
             revolverHealthSystem.MarkBulletAsFired(); // RevolverHealthSystem에 총알 발사 알림 (UI 업데이트)
             currentGun.gundata.currentAmmo--; // 현재 총알 수 감소
 
@@ -102,6 +102,9 @@ public class WeaponController : MonoBehaviour
         // 하나의 코루틴에서 순차적으로 처리하여 -1 오류를 방지
         if (Input.GetMouseButtonDown(1))
         { // 우클릭 코드 구현
+            StartCoroutine(currentGun.DelayedShoot(player, tip)); // 발사
+            currentGun.gundata.currentAmmo = 0;
+            revolverHealthSystem.AllFiredBullets();
             if (!currentGun.gundata.isReloading)
             {
                 StartCoroutine(ReloadAndSyncAmmo());

@@ -55,56 +55,28 @@ public class HitScanGun : BaseGun
 
     public override IEnumerator DelayedShoot(GameObject player, Transform tip)
     {
-        if (gundata.isCharging || gundata.isReloading) yield break;
-        gundata.isCharging = true;
-
-        yield return new WaitForSeconds(0.3f);
-
-        // 250731 총알 발사 중복 해결: 총알 수 0 확인 로직을 WeaponController로 이동하여
-        // 여기서 바로 재장전을 호출하지 않도록 변경
         if (gundata.currentAmmo <= 0)
         {
-            Debug.LogWarning("총알이 없어 차지샷을 사용할 수 없습니다.");
-            gundata.isCharging = false;
+            Debug.LogWarning("총알이 없어 발사할 수 없습니다.");
             yield break;
         }
-
+        
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - tip.position).normalized;
-        RaycastHit2D hit = Physics2D.Raycast(tip.position, direction, 30f);
+        RaycastHit2D[] hit = Physics2D.RaycastAll(tip.position, direction, 30f);        // RaycastAll을 사용하여 여러 충돌체를 감지
 
-        int bulletIndex = gundata.currentAmmo - 1;
-        if (bulletIndex < 0 || bulletIndex >= WC.myBulletObj.Length)
+        BulletBase now = WC.myBulletObj[0].GetComponent<BulletBase>();
+        int i=0;
+        // 이제 안전하게 배열에 접근 가능
+        for (i = 0; i < hit.Length; i++)
         {
-            Debug.LogError($"차지샷 총알 인덱스 오류! 현재 인덱스: {bulletIndex}, 배열 크기: {WC.myBulletObj.Length}");
-            gundata.isCharging = false;
-            yield break;
+            RaycastHit2D hitinfo = hit[i];
+            now.Hitscan(hit[i]); // 충돌 처리 메소드 호출
+            break; // 관통탄이면 break가 아니라 continue 되게 해야 함.
         }
+        DrawTracer(now, tip.position, direction, hit.Length==0?30f:hit[i].distance);
 
-        BulletBase now = WC.myBulletObj[bulletIndex].GetComponent<BulletBase>();
-
-        if (hit.collider != null)
-        {
-            DrawTracer(now, tip.position, direction, hit.distance);
-        }
-        else
-        {
-            DrawTracer(now, tip.position, direction, 30f);
-        }
-
-        now.Hitscan(hit);
-
-        // 250818 총알 발사 중복 해결: 총알 감소 로직을 WeaponController에서만 처리하도록 제거
-        // gundata.currentAmmo = 0;
-
-        Vector2 knockbackDir = new Vector2(-direction.x, -direction.y).normalized;
-        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-        if (rb != null)
-        {
-            Vector2 knockbackForce = knockbackDir * 8f;
-            player.GetComponent<PlayerMove>().ApplyKnockback(knockbackForce);
-        }
-        gundata.isCharging = false;
+        Debug.DrawRay(tip.position, direction * 100f, Color.blue, 1f);
     }
 
     public override IEnumerator ReloadAmmo()

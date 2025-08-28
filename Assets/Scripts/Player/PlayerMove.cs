@@ -44,7 +44,7 @@ public class PlayerMove : MonoBehaviour
         jumpSpeed = 14f; // 점프높이
         maxJumpTime = 0.1f; // 최대점프시간
         sprend = GetComponent<SpriteRenderer>();
-        // anim = GetComponent<Animator>();
+        
     }
 
     // Update is called once per frame
