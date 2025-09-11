@@ -115,6 +115,30 @@ public class RevolverHealthSystem : MonoBehaviour
         Time.timeScale = 0f; // 게임 시간 정지 (게임 일시정지)
     }
 
+    // 사망 후 게임 초기화
+    public void ResetGame()
+    {
+        currentHealth = maxHealth;
+        currentUsableBullets = maxBullets;
+
+        // bulletBlockedStatus와 bulletFiredStatus 배열 초기화
+        for (int i = 0; i < maxBullets; i++)
+        {
+            bulletBlockedStatus[i] = false;
+            bulletFiredStatus[i] = false;
+        }
+
+        // 게임 오버 패널 비활성화
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
+
+        // UI 업데이트
+        UpdateUI();
+        Debug.Log("게임 상태가 초기화되었습니다.");
+    }
+
     public void Heal(int amount)
     {
         currentHealth += amount;

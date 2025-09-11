@@ -17,7 +17,7 @@ public class ShortEnemyAI : EnemyAI
         HP = GetComponent<Health>();
         HP.maxHealth = 25f; //최대 체력 설정
 
-        detectionRange = 11f;
+        detectionRange = 15f;
         attackRange = 3.0f;
         moveSpeed = 4f;
         isPlayerDetected = false;

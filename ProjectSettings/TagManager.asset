@@ -10,6 +10,7 @@ TagManager:
   - Return
   - Spike
   - EnemyAttack
+  - MainUI
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - UI
   - Enemy
   - Gate
-  - 
+  - EnemyAttack
   - 
   - 
   - 

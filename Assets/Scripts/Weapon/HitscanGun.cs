@@ -45,10 +45,17 @@ public class HitScanGun : BaseGun
         for (i = 0; i < hit.Length; i++)
         {
             RaycastHit2D hitinfo = hit[i];
+            // 여기에 폭탄에 총을 쐈을 때, 레이저가 막히는 문제 발생 해결해야함~
+            if (hitinfo.collider.gameObject.CompareTag("EnemyAttack")) continue;
+            // if (hitinfo.c ~~ 해ㅑ서 거를 거 더 추가하면 됩니다.(확장성 망함)
+            // 관통탄을 쏜다고 가정하면 위에 있는 if문들을 싸그리 무시하고 now.hitscan으로 가게 하면 됩니다.
+
             now.Hitscan(hit[i]); // 충돌 처리 메소드 호출
+            
             break; // 관통탄이면 break가 아니라 continue 되게 해야 함.
         }
-        DrawTracer(now, tip.position, direction, hit.Length==0?30f:hit[i].distance);
+        
+        DrawTracer(now, tip.position, direction, hit.Length==i?30f:hit[i].distance);
 
         Debug.DrawRay(tip.position, direction * 100f, Color.red, 1f);
     }

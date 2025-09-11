@@ -9,11 +9,23 @@ EditorBuildSettings:
     path: Assets/Scenes/NewHappyLine.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 87e7fd925e3748f48bb5183788d02fc6
+  - enabled: 1
     path: "Assets/Scenes/\uBFE1\uBFE1.unity"
     guid: 018a81a077a698a4e93323eced800204
   - enabled: 1
     path: Assets/Scenes/Room1.unity
     guid: 7dd02f0ef32ebd249949b8416d19da42
+  - enabled: 1
+    path: Assets/Scenes/Room2.unity
+    guid: e9b091586eb892043a0180d1a6bbfaf6
+  - enabled: 1
+    path: Assets/Scenes/Room3.unity
+    guid: da81dab5a87fa5b409ed279fc6a7e514
+  - enabled: 1
+    path: Assets/Scenes/Room6.unity
+    guid: 5daa3c1fef0071d49be57c3bd16982a8
   - enabled: 1
     path: Assets/Scenes/Room7.unity
     guid: e064a53fcdc10574897bbcc1cb19711f
