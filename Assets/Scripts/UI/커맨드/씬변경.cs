@@ -68,10 +68,12 @@ public class 씬변경 : MonoBehaviour
         GameObject player = GameObject.FindWithTag("Player");
         if (player != null)
         {
-            playerTransform = player.transform;
+            // 0918 이용진 - 밑에거 다 주석처리했는데 해결됐습니다.
+
+            //playerTransform = player.transform;
             // 플레이어의 위치를 (0,0,0)으로 설정합니다.
-            playerTransform.position = Vector3.zero;
-            Debug.Log($"Player moved to (0,0,0) in scene: {scene.name} via 씬변경 script.");
+            //playerTransform.position = Vector3.zero;
+            //Debug.Log($"Player moved to (0,0,0) in scene: {scene.name} via 씬변경 script.");
         }
         else
         {

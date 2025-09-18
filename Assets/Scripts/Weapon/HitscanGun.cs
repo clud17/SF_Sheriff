@@ -38,15 +38,15 @@ public class HitScanGun : BaseGun
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 direction = (mousePos - tip.position).normalized;
         RaycastHit2D[] hit = Physics2D.RaycastAll(tip.position, direction, 30f);        // RaycastAll을 사용하여 여러 충돌체를 감지
-
+        
         BulletBase now = WC.myBulletObj[gundata.currentAmmo].GetComponent<BulletBase>();
         int i=0;
         // 이제 안전하게 배열에 접근 가능
         for (i = 0; i < hit.Length; i++)
         {
             RaycastHit2D hitinfo = hit[i];
-            // 여기에 폭탄에 총을 쐈을 때, 레이저가 막히는 문제 발생 해결해야함~
             if (hitinfo.collider.gameObject.CompareTag("EnemyAttack")) continue;
+            if (hitinfo.collider.gameObject.CompareTag("Player")) continue;
             // if (hitinfo.c ~~ 해ㅑ서 거를 거 더 추가하면 됩니다.(확장성 망함)
             // 관통탄을 쏜다고 가정하면 위에 있는 if문들을 싸그리 무시하고 now.hitscan으로 가게 하면 됩니다.
 

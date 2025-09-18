@@ -1,5 +1,6 @@
 using System.Collections;
 using System.ComponentModel.Design;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -33,22 +34,23 @@ public class EnemyAI : MonoBehaviour
     {
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
 
-        //플레이어 탐지
-        if (distanceToPlayer <= detectionRange)
+        //플레이어 탐지 // ray 사용해야함 if문 바꿔야함
+        Vector2 dir = (player.position - transform.position).normalized;
+
+        LayerMask mask = LayerMask.GetMask("Player", "Ground");
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, detectionRange, mask);
+
+        Debug.DrawRay(transform.position, dir * detectionRange, Color.green);
+
+        if (hit.collider != null && hit.collider.gameObject.CompareTag("Player"))
         {
             isPlayerDetected = true;
+            // 여기서 ray를 이용해서 플레이어가 탐지되면 
         }
         else
         {
             isPlayerDetected = false;
             StopMovement();
-            Invoke("PatrolMovement", 1.0f);
-            // isPlayerDetected = false;
-            // if (!isPatrolling)
-            // {
-            //     StopMovement();
-            //     Invoke("PatrolMovement", 1.0f);
-            // }
         }
 
         //플레이어를 탐지했으면 행동 시작
@@ -72,18 +74,6 @@ public class EnemyAI : MonoBehaviour
 
             }
         }
-
-        // if (!isPlayerDetected && isPatrolling)
-        // {
-        //     transform.position += (Vector3)patrolDirection * moveSpeed * Time.deltaTime;
-        //     patrolTimer -= Time.deltaTime;
-
-        //     if (patrolTimer <= 0f)
-        //     {
-        //         isPatrolling = false;
-        //         Invoke("PatrolMovement", 0.5f); // 다음 패트롤 방향 기다림
-        //     }
-        // }
     }
 
     protected virtual void MoveTowardsPlayer()  // why virtual? => 날아다니는 몹은 이동 방식이 다르므로 
@@ -96,20 +86,6 @@ public class EnemyAI : MonoBehaviour
 
     void StopMovement()
     {
-        //정지 상태 유지(아무 코드 없는게 정상)
-    }
-    // protected Vector2 patrolDirection;
-    // protected float patrolMoveDuration = 1f;
-    // protected float patrolTimer = 0f;
-    // protected bool isPatrolling = false;
-    void PatrolMovement()
-    {
-        // //패트롤 이동 로직
-        // patrolDirection = new Vector2(Random.Range(-1f, 1f), 0f).normalized;
-
-        // // 타이머 초기화
-        // patrolTimer = patrolMoveDuration;
-        // isPatrolling = true;
     }
     protected virtual IEnumerator EnemyAttack()
     {

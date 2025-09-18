@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76881570c432c8d4dbef0693686fccff, type: 3}
+  m_Name: test
+  m_EditorClassIdentifier: 
+  dialogueSteps:
+  - text: "\uC548\uB155\n"
+    typingSpeed: 0.12
+    speechBubbleSprite: {fileID: 0}
+  - text: "\uC9D1\uC744 \uAC00\uACE0 \uC2F6\uB2E8\uB2E4"
+    typingSpeed: 0.3
+    speechBubbleSprite: {fileID: 0}
+  - text: "\uAD73\uC774 npc\uC640 \uD50C\uB808\uC774\uC5B4\uC758 \uC0C1\uD638\uC791\uC6A9\uC744
+      \uB9CC\uB4E4\uC5B4\uC57C\uD560\uAE4C?"
+    typingSpeed: 0.3
+    speechBubbleSprite: {fileID: 0}
+  - text: "\uADF8\uB798\uC57C\uACA0\uC9C0..."
+    typingSpeed: 0.3
+    speechBubbleSprite: {fileID: 0}

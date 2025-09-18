@@ -26,20 +26,8 @@ public class WeaponController : MonoBehaviour
         /// Start() 메소드
         /// my___에 지금 탄환이 어떤 것이 있는지 저장하는 용도.
         /// 탄환 순서나 종류 바뀌면 이 코드 다시 실행되어야 함.
-        /// 따라서 총알 바꾸는 기능 도입되면 여기 말고 baseGun.총알변경(배열[7]) 쓰는 게 좋아보임
 
-        // 기본 탄환의 종류를 지정하는 배열. 0: 기본, 1: charge(바꿔야함 우클릭에만 적용되게), 2: 관통 등등. 나중에 휴식을 할 때, 바꿀수 있어야함
-        int[] startBullet = { 1, 3, 1, 3, 3, 1 }; // ABCDEF.       //(수정 필 : 나중에 업데이트 할 수 있게 gundata에 넣는다??)
-        for (int i = 6; i >= 1; i--) // 기본 탄환 6개.
-        {
-            myBulletObj[7 - i] = bulletPrefabs[startBullet[i - 1]];
-            myBulletObj[7 - i].GetComponent<BulletBase>().InitFromData();
-            myBulletData[7 - i] = bulletDatas[startBullet[i - 1]];
-        }
-        // 위 코드를 실행한 이후 myBullets 배열은 { ,F,E,D,C,B,A}가 된다
-        myBulletObj[0] = bulletPrefabs[0]; // bulletPrefabs[0] 
-        myBulletData[0] = bulletDatas[startBullet[0]];
-        currentGun.InitSetting(); // 총 초기화 설정
+        setBullet(new int[] {1,3,1,3,3,1});
 
         // aud = GetComponent<AudioSource>(); // AudioManager.Instance를 사용하므로 필요 없습니다.
 
@@ -119,6 +107,25 @@ public class WeaponController : MonoBehaviour
         }
         
     }
+
+    public void setBullet(int[] bullets)
+    {
+        //기존 WeaponController.cs의 start()코드 중 총알을 설정하는 코드를 갖고왔습니다.
+        //총알 구조가 바뀔때마다 호출해야하므로 start()에서 쓸 수 없기에 따로 메소드로 빼놓습니다.
+
+        // 기본 탄환의 종류를 지정하는 배열. 0: 기본, 1: charge(바꿔야함 우클릭에만 적용되게), 2: 관통 등등. 나중에 휴식을 할 때, 바꿀수 있어야함
+        for (int i = 6; i >= 1; i--) // 기본 탄환 6개.
+        {
+            myBulletObj[7 - i] = bulletPrefabs[bullets[i - 1]];
+            myBulletObj[7 - i].GetComponent<BulletBase>().InitFromData();
+            myBulletData[7 - i] = bulletDatas[bullets[i - 1]];
+        }
+        // 위 코드를 실행한 이후 myBullets 배열은 { ,F,E,D,C,B,A}가 된다
+        myBulletObj[0] = bulletPrefabs[0]; // bulletPrefabs[0] 
+        myBulletData[0] = bulletDatas[bullets[0]];
+        currentGun.InitSetting(); // 총 초기화 설정
+    }
+
 
     // --- 추가된 재장전 동기화 코루틴 시작 ---
     // 재장전이 끝난 후에 총알 수를 UI와 동기화하여 -1 오류를 방지함

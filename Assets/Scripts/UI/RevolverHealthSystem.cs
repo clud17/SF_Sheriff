@@ -1,7 +1,8 @@
+using Mono.Cecil.Cil;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 public class RevolverHealthSystem : MonoBehaviour
 {
     [Header("체력 설정")]
@@ -27,9 +28,12 @@ public class RevolverHealthSystem : MonoBehaviour
     public Sprite emptyBulletSprite;
     public SpriteRenderer playerSprite; // 플레이어 스프라이트 (무적 상태 시 반짝임 효과에 사용)
 
+    public (string, Vector3) savePoint;
+
     // 초기화: Awake에서 변수와 배열을 모두 초기화합니다.
     void Awake()
     {
+        savePoint = ("Room0", new Vector3(-5, -5, 0));
         playerSprite = GetComponent<SpriteRenderer>();
         isInvincible = false;
 
@@ -107,12 +111,25 @@ public class RevolverHealthSystem : MonoBehaviour
     {
         Debug.Log("게임 오버! 플레이어 사망!");
 
+        /*
+
         // 게임 오버 패널을 활성화하고 게임 시간을 정지
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true); // 게임 오버 UI 패널 활성화
         }
         Time.timeScale = 0f; // 게임 시간 정지 (게임 일시정지)
+
+
+        */// 세이브포인트로 되돌아가는 거라서 윗 코드 주석처리하겠습니다.
+
+
+        // 0914 추가 코드입니다. 플레이어 사망시 세이브포인트로 되돌아갑니다.
+        ResetGame();
+        SceneManager.LoadScene(savePoint.Item1);
+        GetComponent<PlayerMove>().gameObject.transform.position = savePoint.Item2;
+        
+
     }
 
     // 사망 후 게임 초기화
