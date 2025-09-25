@@ -7,7 +7,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip ChargeSound;  // 충전 사운드
     public AudioClip ReloadSound;
     private AudioSource aud;
-     void Awake()
+    
+    void Awake()
     {
         if (Instance == null)
             Instance = this;

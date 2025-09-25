@@ -45,6 +45,7 @@ public class HitScanGun : BaseGun
         for (i = 0; i < hit.Length; i++)
         {
             RaycastHit2D hitinfo = hit[i];
+            Debug.Log($"{hitinfo.collider.gameObject.tag}, {i}");
             if (hitinfo.collider.gameObject.CompareTag("EnemyAttack")) continue;
             if (hitinfo.collider.gameObject.CompareTag("Player")) continue;
             // if (hitinfo.c ~~ 해ㅑ서 거를 거 더 추가하면 됩니다.(확장성 망함)

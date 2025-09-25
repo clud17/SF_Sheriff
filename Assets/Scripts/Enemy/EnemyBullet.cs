@@ -24,8 +24,9 @@ public class EnemyBullet : MonoBehaviour
     }
     public void EnemyShoot(Vector2 EnemyBulletDirection)
     {
+        // 만약 ray를 구현한다면 여기에
         if (EBrb == null) return;
-        EBrb.linearVelocity = EnemyBulletDirection * 17.5f; // 총알 이동 속도 설정
+        EBrb.linearVelocity = EnemyBulletDirection * 30.0f; // 총알 이동 속도 설정
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -61,4 +62,6 @@ public class EnemyBullet : MonoBehaviour
         knockbackRange = knRange;                   // 이렇게 구현했습니다.
         damage = dmg;
     }
+
+
 }

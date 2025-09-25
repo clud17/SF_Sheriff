@@ -9,8 +9,12 @@ public class GameUIController : MonoBehaviour
 
     // UI 패널들을 관리하기 위한 변수
     [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private GameObject bulletMenu;
     [SerializeField] private GameObject gameOverPanel; 
     [SerializeField] private GameObject[] buttons;
+
+    private bool isBulletMenuOpened = false;
+    private bool isPauseMenuOpened = false;
 
     void Start()
     {
@@ -18,6 +22,10 @@ public class GameUIController : MonoBehaviour
         if (pauseMenu != null)
         {
             pauseMenu.SetActive(false);
+        }
+        if (bulletMenu != null)
+        {
+            bulletMenu.SetActive(false);
         }
     }
 
@@ -29,13 +37,35 @@ public class GameUIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// BulletMenu UI를 켜고 끄는 기능 및 변경된 총알상태 저장을 구현하는 메소드
+    /// </summary>
+    public void SetBulletMenu(string type)
+    {
+        switch (type)
+        {
+            case "open":
+                isBulletMenuOpened = true;
+                break;
+            case "close":
+                isBulletMenuOpened = false;
+                break;
+            case "toggle":
+                isBulletMenuOpened = !isBulletMenuOpened;
+                break;
+            default:
+                Debug.Log("SetBulletMenu의 type 파라미터 오류입니다");
+                break;
+        }
+        bulletMenu.SetActive(isBulletMenuOpened);
+    }
+
     public void TogglePauseMenu()
     {
-        bool isActive = pauseMenu.activeSelf;
-        pauseMenu.SetActive(!isActive);
-        Time.timeScale = isActive ? 1f : 0f;
-
-        if (!isActive)
+        isPauseMenuOpened = !isPauseMenuOpened;
+        pauseMenu.SetActive(isPauseMenuOpened);
+        Time.timeScale = isPauseMenuOpened ? 0f : 1f;
+        if (!isPauseMenuOpened)
         {
             if (buttons.Length > 0 && buttons[0] != null)
             {

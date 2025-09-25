@@ -15,7 +15,7 @@ public class WeaponController : MonoBehaviour
 
     public GameObject[] bulletPrefabs;
     public BulletData[] bulletDatas;
-
+    public bool[] isBulletUnlocked;
 
     //250731 체력♡총알
     public RevolverHealthSystem revolverHealthSystem; // 체력 스크립트와 연결
@@ -23,6 +23,9 @@ public class WeaponController : MonoBehaviour
 
     void Start()
     {
+        isBulletUnlocked = new bool[bulletDatas.Length];
+        isBulletUnlocked[1] = isBulletUnlocked[3] = true;
+        
         /// Start() 메소드
         /// my___에 지금 탄환이 어떤 것이 있는지 저장하는 용도.
         /// 탄환 순서나 종류 바뀌면 이 코드 다시 실행되어야 함.

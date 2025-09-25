@@ -9,6 +9,7 @@ public class BulletData : ScriptableObject
     public Color tracerColor;
     public float tracerWidth;
     public GameObject tracerPrefab;
+    public int bulletId;
     public Sprite icon;
     // 다양한 특성들!
 }
