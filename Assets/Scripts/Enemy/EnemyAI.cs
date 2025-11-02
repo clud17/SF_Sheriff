@@ -1,6 +1,6 @@
 using System.Collections;
 using System.ComponentModel.Design;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -17,7 +17,7 @@ public class EnemyAI : MonoBehaviour
 
     protected bool isPlayerDetected;
     
-    private Animator EnemyAnimator;
+    protected Animator EnemyAnimator;
     protected Health HP;
     private SpriteRenderer Enemysprend;
     protected virtual void Init() // 자식이 호출하는 메소드

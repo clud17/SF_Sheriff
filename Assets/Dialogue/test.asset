@@ -17,7 +17,7 @@ MonoBehaviour:
     typingSpeed: 0.12
     speechBubbleSprite: {fileID: 0}
   - text: "\uC9D1\uC744 \uAC00\uACE0 \uC2F6\uB2E8\uB2E4"
-    typingSpeed: 0.3
+    typingSpeed: 0.15
     speechBubbleSprite: {fileID: 0}
   - text: "\uAD73\uC774 npc\uC640 \uD50C\uB808\uC774\uC5B4\uC758 \uC0C1\uD638\uC791\uC6A9\uC744
       \uB9CC\uB4E4\uC5B4\uC57C\uD560\uAE4C?"

@@ -41,7 +41,7 @@ public class PlayerMove : MonoBehaviour
         dashSpeed = 30f;
 
         moveSpeed = 6.4f; // 이속
-        jumpSpeed = 14f; // 점프높이
+        jumpSpeed = 17.5f; // 점프높이
         maxJumpTime = 0.1f; // 최대점프시간
         sprend = GetComponent<SpriteRenderer>();
         
@@ -98,7 +98,7 @@ public class PlayerMove : MonoBehaviour
                 isDashing = false;
                 //Debug.Log("isDashing이 false입니다.");
                 anim.SetBool("isDashing", false);
-                rb.gravityScale = 2f;
+                rb.gravityScale = 3f;
             }
         }
     }

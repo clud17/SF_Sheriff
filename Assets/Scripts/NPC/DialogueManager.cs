@@ -58,9 +58,9 @@ public class DialogueManager : MonoBehaviour
         if (isDialogueActive)
         {
             // F키, 스페이스바, 또는 마우스 왼쪽 버튼 입력 감지
-            if (Keyboard.current.fKey.wasPressedThisFrame ||
-                Keyboard.current.spaceKey.wasPressedThisFrame ||
-                Mouse.current.leftButton.wasPressedThisFrame)
+            if (Keyboard.current.fKey.wasPressedThisFrame /* ||
+                 Keyboard.current.spaceKey.wasPressedThisFrame ||
+                Mouse.current.leftButton.wasPressedThisFrame */ )
             {
                 DisplayNextSentence();
             }
