@@ -30,7 +30,7 @@ public class WeaponController : MonoBehaviour
         /// my___에 지금 탄환이 어떤 것이 있는지 저장하는 용도.
         /// 탄환 순서나 종류 바뀌면 이 코드 다시 실행되어야 함.
 
-        setBullet(new int[] {1,2,1,4,3,1});
+        setBullet(new int[] {1,2,1,4,5,1});
 
         // aud = GetComponent<AudioSource>(); // AudioManager.Instance를 사용하므로 필요 없습니다.
 
@@ -117,7 +117,9 @@ public class WeaponController : MonoBehaviour
         //기존 WeaponController.cs의 start()코드 중 총알을 설정하는 코드를 갖고왔습니다.
         //총알 구조가 바뀔때마다 호출해야하므로 start()에서 쓸 수 없기에 따로 메소드로 빼놓습니다.
 
-        // 기본 탄환의 종류를 지정하는 배열. 0: 기본, 1: charge(바꿔야함 우클릭에만 적용되게), 2: 관통 등등. 나중에 휴식을 할 때, 바꿀수 있어야함
+        // 기본 탄환의 종류를 지정하는 배열. 
+        // 0: 기본, 1: charge(바꿔야함 우클릭에만 적용되게), 2: 관통, 3: x, 4: 치유, 5: 약점
+        // 나중에 휴식을 할 때, 바꿀수 있어야함
         for (int i = 6; i >= 1; i--) // 기본 탄환 6개.
         {
             myBulletObj[7 - i] = bulletPrefabs[bullets[i - 1]];

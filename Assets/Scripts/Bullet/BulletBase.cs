@@ -65,7 +65,7 @@ public abstract class BulletBase : MonoBehaviour
         {
             case "Enemy":
                 setIsHit(true);
-                hitinfo.collider.GetComponent<Health>().ApplyDamage(damage);
+                hitinfo.collider.GetComponent<Health>().ApplyDamage(damage); // 적 체력에 데미지 적용
                 Debug.Log("적에게 데미지를 줌(히트스캔)");
                 
                 break;
