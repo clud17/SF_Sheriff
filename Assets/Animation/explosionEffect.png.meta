@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: 1ad58012659820d4f8af588494ccb69a
+guid: d25ced187b4f15e409559fb32084c90a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1666479139865873607
-    second: bomb 1_0
+      213: -5121352638553505167
+    second: expEffect_0
   - first:
-      213: -3504334257327011392
-    second: bomb 1_1
+      213: -1052174850426433713
+    second: expEffect_1
   - first:
-      213: -2796121468068040869
-    second: bomb 1_2
+      213: -109898331182635990
+    second: expEffect_2
   - first:
-      213: -8752559542591876923
-    second: bomb 1_3
+      213: 23418550549872887
+    second: expEffect_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,13 +109,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: bomb 1_0
+      name: expEffect_0
       rect:
         serializedVersion: 2
-        x: 51
-        y: 46
-        width: 328
-        height: 335
+        x: 113
+        y: 59
+        width: 299
+        height: 300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7cccd45c2f5802710800000000000000
-      internalID: 1666479139865873607
+      spriteID: 1724289c8ec4de8b0800000000000000
+      internalID: -5121352638553505167
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bomb 1_1
+      name: expEffect_1
       rect:
         serializedVersion: 2
-        x: 433
-        y: 40
-        width: 300
-        height: 317
+        x: 527
+        y: 66
+        width: 277
+        height: 260
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -146,20 +146,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0c98ac94f8a1e5fc0800000000000000
-      internalID: -3504334257327011392
+      spriteID: f4f8bb65c8ce561f0800000000000000
+      internalID: -1052174850426433713
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bomb 1_2
+      name: expEffect_2
       rect:
         serializedVersion: 2
-        x: 832
-        y: 34
-        width: 287
-        height: 308
+        x: 929
+        y: 110
+        width: 222
+        height: 209
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -168,20 +168,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b5fe5fad65e2239d0800000000000000
-      internalID: -2796121468068040869
+      spriteID: a246370dc00997ef0800000000000000
+      internalID: -109898331182635990
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: bomb 1_3
+      name: expEffect_3
       rect:
         serializedVersion: 2
-        x: 1222
-        y: 37
-        width: 281
-        height: 275
+        x: 1303
+        y: 156
+        width: 143
+        height: 119
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -190,8 +190,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5c01b541879a88680800000000000000
-      internalID: -8752559542591876923
+      spriteID: 7f00ea23c03335000800000000000000
+      internalID: 23418550549872887
       vertices: []
       indices: 
       edges: []
@@ -210,10 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      bomb 1_0: 1666479139865873607
-      bomb 1_1: -3504334257327011392
-      bomb 1_2: -2796121468068040869
-      bomb 1_3: -8752559542591876923
+      expEffect_0: -5121352638553505167
+      expEffect_1: -1052174850426433713
+      expEffect_2: -109898331182635990
+      expEffect_3: 23418550549872887
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

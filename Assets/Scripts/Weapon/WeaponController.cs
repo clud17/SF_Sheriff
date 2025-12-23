@@ -30,7 +30,7 @@ public class WeaponController : MonoBehaviour
         /// my___에 지금 탄환이 어떤 것이 있는지 저장하는 용도.
         /// 탄환 순서나 종류 바뀌면 이 코드 다시 실행되어야 함.
 
-        setBullet(new int[] {1,3,1,3,3,1});
+        setBullet(new int[] {1,2,1,4,3,1});
 
         // aud = GetComponent<AudioSource>(); // AudioManager.Instance를 사용하므로 필요 없습니다.
 
@@ -57,6 +57,7 @@ public class WeaponController : MonoBehaviour
 
         //RevolverHealthSystem 연결
         // RevolverHealthSystem에서 현재 발사 가능한 총알 수를 가져와 업데이트
+        if (revolverHealthSystem == null) return; // 안전장치
         int availableBulletsToFire = revolverHealthSystem.GetCurrentAvailableBulletsForFiring();
 
         // 만약 currentGun의 현재 총알 수가 RevolverHealthSystem에서 알려주는 발사 가능한 총알 수보다 많다면,

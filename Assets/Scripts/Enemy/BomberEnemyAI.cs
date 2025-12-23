@@ -42,6 +42,7 @@ public class BomberEnemyAI : EnemyAI
         // 넉백 값 전달하기
         spawnedBomb.GetComponent<EnemyBomb>().GetValue(knockbackRange, damage);
         
+        
         yield return base.EnemyAttack();
     }
 }

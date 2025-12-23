@@ -6,7 +6,13 @@ public class PassBullet : BulletBase
     public override void Hitscan(RaycastHit2D hitinfo) // 히트스캔 메소드
     {
         base.Hitscan(hitinfo);
-        
+        if (base.getIsHit())
+        {
+            /* 여기에 특수 기능 추가
+            
+            */
+            base.setIsHit(false); // 초기화
+        }
         // 여기에 궤적 추가하면 될듯???
 
     }

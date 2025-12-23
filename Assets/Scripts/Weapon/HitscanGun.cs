@@ -63,6 +63,8 @@ public class HitScanGun : BaseGun
 
     public override IEnumerator DelayedShoot(GameObject player, Transform tip)
     {
+        Debug.Log("1113 HitscanGun.cs에서의 DelayedShoot");
+        //여긴 되는데 밑에서 뭔가 안되는듯.
         if (gundata.currentAmmo <= 0)
         {
             Debug.LogWarning("총알이 없어 발사할 수 없습니다.");

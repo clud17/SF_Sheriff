@@ -2,7 +2,9 @@ using System.Collections;
 using System.ComponentModel.Design;
 //using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-
+/// <summary>
+/// 적 AI의 기본 클래스. 모든 적은 이 클래스를 상속받음
+/// </summary>
 public class EnemyAI : MonoBehaviour
 {
     protected Transform player;

@@ -12,6 +12,7 @@ public abstract class BulletBase : MonoBehaviour
     //총알이라면 무조건 가지고 있어야 하는 필드들
     public Vector2 moveDirection;//방향
     protected Rigidbody2D rb;
+    protected RevolverHealthSystem H_System; // 체력 시스템 참조
 
     protected string bulletName;
     float damage;
@@ -21,6 +22,18 @@ public abstract class BulletBase : MonoBehaviour
     float tracerWidth;
     GameObject tracerPrefab;
     Sprite icon;
+
+    // 총알이 적중했는지 여부 체크 // Basic, Pass, heal Bullet..등에 사용
+    // 왜 사용했냐? => 총알 당 특수 기능을 구현하기 위해선 bullet에서 적중 여부를 알아야 하기 때문
+    private bool ishit = false; 
+    protected bool getIsHit()
+    {
+        return ishit;
+    }
+    protected void setIsHit(bool value)
+    {
+        ishit = value;
+    }
 
     public void InitFromData()
     {
@@ -32,6 +45,7 @@ public abstract class BulletBase : MonoBehaviour
         tracerWidth = bulletData.tracerWidth;
         tracerPrefab = bulletData.tracerPrefab;
         icon = bulletData.icon;
+        H_System = FindObjectOfType<RevolverHealthSystem>(); // 체력 시스템 참조
     }
 
     public int gunmode; // 총 모드 (0: hitscan, 1: projectile)
@@ -50,8 +64,10 @@ public abstract class BulletBase : MonoBehaviour
         switch (hitinfo.collider.tag)
         {
             case "Enemy":
+                setIsHit(true);
                 hitinfo.collider.GetComponent<Health>().ApplyDamage(damage);
                 Debug.Log("적에게 데미지를 줌(히트스캔)");
+                
                 break;
             case "Switch":
                 Debug.Log("오브젝트 가동됨");

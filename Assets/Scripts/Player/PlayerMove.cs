@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 using UnityEngine.XR;
 
 public class PlayerMove : MonoBehaviour
@@ -16,6 +17,7 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private SpriteRenderer sprend;
+    private SpriteLibrary spLib;
 
     private bool isJumping = false;
     private float jumpTimeCounter = 0f;
@@ -44,7 +46,7 @@ public class PlayerMove : MonoBehaviour
         jumpSpeed = 17.5f; // 점프높이
         maxJumpTime = 0.1f; // 최대점프시간
         sprend = GetComponent<SpriteRenderer>();
-        
+        spLib = GetComponent<SpriteLibrary>();
     }
 
     // Update is called once per frame
@@ -64,11 +66,11 @@ public class PlayerMove : MonoBehaviour
         float moveX = Input.GetAxisRaw("Horizontal");
         if (moveX < 0) // 좌측 이동
         {
-            sprend.transform.localScale = new Vector3(-1f, 1f, 1f); // 좌측 이동시 스프라이트 반전
+            //sprend.transform.localScale = new Vector3(-1f, 1f, 1f); // 좌측 이동시 스프라이트 반전
         }
         else if (moveX > 0) // 우측 이동
         {
-            sprend.transform.localScale = new Vector3(1f, 1f, 1f); // 우측 이동시 스프라이트 원래대로
+            //sprend.transform.localScale = new Vector3(1f, 1f, 1f); // 우측 이동시 스프라이트 원래대로
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown && IsGrounded())

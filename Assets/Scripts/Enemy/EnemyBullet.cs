@@ -1,5 +1,7 @@
 using UnityEngine;
-
+/// <summary>
+/// 원거리 적군이 발사하는 총알
+/// </summary>
 public class EnemyBullet : MonoBehaviour
 {
     protected Transform player;
@@ -26,7 +28,7 @@ public class EnemyBullet : MonoBehaviour
     {
         // 만약 ray를 구현한다면 여기에
         if (EBrb == null) return;
-        EBrb.linearVelocity = EnemyBulletDirection * 30.0f; // 총알 이동 속도 설정
+        EBrb.linearVelocity = EnemyBulletDirection * 50.0f; // 총알 이동 속도 설정
     }
     private void OnTriggerEnter2D(Collider2D other)
     {

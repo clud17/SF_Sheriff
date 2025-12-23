@@ -259,6 +259,11 @@ public class RevolverHealthSystem : MonoBehaviour
     // 피격시 무적 시간
     private IEnumerator Invincibility()
     {
+        //Sprite 관련 코드가 다 안됩니다. 졸라맨에서 실제 플레이어로 스크립트를 하나씩 이식하고 있습니다.
+        //새로운 플레이어에는 Spriterenderer가 없어서 접근하려는 코드 이후 코드가 다 실행이 안됩니다.
+        //당장 밑 코드는 무적 상태를 해제하는 코드가 작동하지 않아서 상시무적이 발생함
+        //SpriteRenderer. 대신에 SpriteLibrary.무언가를 써서 원래 했던 기능을 구현해야 하는데, 일단 나중에 알아보겠습니다.
+        //251113 이용진
         int countTime = 0;
         while (countTime < 10)
         {

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyBomb : MonoBehaviour
 {
+    public GameObject ExplosionEffect;
     protected Transform player;
     RevolverHealthSystem revolverHealthSystem;
     private Rigidbody2D EBrb;  // EnemyBomb의 Rigidbody2D 컴포넌트
@@ -10,6 +11,11 @@ public class EnemyBomb : MonoBehaviour
     private int damage;
 
     private bool istakedamage;
+    private void OnDestroy() //삭제되면서 폭발이펙트를 생성하고, 그 폭발이펙트 오브젝트에 넉백거리나 값을 넘긴다.
+    {
+        GameObject bomb = Instantiate(ExplosionEffect, transform.position, Quaternion.identity);
+        bomb.GetComponent<explosionEffect>().GetValue(knockbackRange,damage);
+    }
     private void Awake()
     {
         revolverHealthSystem = GameObject.FindGameObjectWithTag("Player").GetComponent<RevolverHealthSystem>();
@@ -18,7 +24,7 @@ public class EnemyBomb : MonoBehaviour
         knockbackRange = 0.0f;
         damage = 0;
 
-        istakedamage = false;
+        istakedamage = false; 
 
         Destroy(gameObject, 3.0f);          // 3초뒤면 적군 폭탄 사라짐
     }
@@ -35,20 +41,25 @@ public class EnemyBomb : MonoBehaviour
         {
             if (other.gameObject.CompareTag("Player") && revolverHealthSystem != null)
             {
-                istakedamage = true; // 플레이어에게 데미지를 주었음을 표시
+                // @@@ 데미지 넣는 코드는 전부 다 폭발 이펙트에서 구현했습니다. 충돌 또는 3초 사라질시 지워지는 것만 넣었습니다.
+                // @@@ 바뀐 코드 이해되었으면 기존 주석처리했던 코드는 지워주셔도 됩니다.
+                // @@@ to. 계 from. 용
 
-                PlayerMove playerMove = other.gameObject.GetComponent<PlayerMove>();
-                Vector2 direction = (player.position - transform.position).normalized;   // 벡터 계산
-                direction.y = 1.0f;                                                      // 벡터 계산
-                Vector2 knockback = direction * knockbackRange;                          // 계산된 벡터에 넉백 거리 곱함  
-                playerMove.ApplyKnockback(knockback);
+                // istakedamage = true; // 플레이어에게 데미지를 주었음을 표시 // @@@ 이거 왜 있는지 궁금합니다
 
-                Debug.Log("플레이어에게 데미지 줌");
-                if (revolverHealthSystem != null)   // 데미지 적용
-                {
-                    // 플레이어의 리볼버 체력 시스템에서 데미지를 적용
-                    revolverHealthSystem.TakeDamage(damage); // 나중에 float으로 전환해야돼 RevolverHealthSystem에서 데미지 적용할때
-                }
+                // PlayerMove playerMove = other.gameObject.GetComponent<PlayerMove>();
+                // Vector2 direction = (player.position - transform.position).normalized;   // 벡터 계산
+                // direction.y = 1.0f;                                                      // 벡터 계산
+                // Vector2 knockback = direction * knockbackRange;                          // 계산된 벡터에 넉백 거리 곱함  
+                // playerMove.ApplyKnockback(knockback);
+
+                // Debug.Log("플레이어에게 데미지 줌");
+                // if (revolverHealthSystem != null)   // 데미지 적용
+                // {
+                //     // 플레이어의 리볼버 체력 시스템에서 데미지를 적용
+                //     revolverHealthSystem.TakeDamage(damage); // 나중에 float으로 전환해야돼 RevolverHealthSystem에서 데미지 적용할때
+                // }
+                Destroy(gameObject); // 게임오브젝트 삭제
             }
             else if (other.gameObject.CompareTag("Ground"))
             {
