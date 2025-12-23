@@ -5,7 +5,7 @@ public class Health : MonoBehaviour
     public float maxHealth = 100f;
     public float currentEnemyHealth;
     // 약점 상태 플래그
-    public bool weakness = false;
+    private bool weakness = false;
     // 임시 데미지 저장 변수, 약점탄을 맞췄을 때, 데미지 1.5배 적용하기 위함
     private float weaknessdamage;
 
