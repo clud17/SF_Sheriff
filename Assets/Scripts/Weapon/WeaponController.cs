@@ -30,7 +30,8 @@ public class WeaponController : MonoBehaviour
         /// my___에 지금 탄환이 어떤 것이 있는지 저장하는 용도.
         /// 탄환 순서나 종류 바뀌면 이 코드 다시 실행되어야 함.
 
-        setBullet(new int[] {1,2,1,4,5,1});
+        // 0: x, 1: 기본, 2: 관통, 3: 치유, 4: 약점, 5: 장전
+        setBullet(new int[] {1,2,1,3,4,5});
 
         // aud = GetComponent<AudioSource>(); // AudioManager.Instance를 사용하므로 필요 없습니다.
 
@@ -96,7 +97,7 @@ public class WeaponController : MonoBehaviour
         { // 우클릭 코드 구현
             StartCoroutine(currentGun.DelayedShoot(player, tip)); // 발사
             currentGun.gundata.currentAmmo = 0;
-            revolverHealthSystem.AllFiredBullets();
+            revolverHealthSystem.AllFire();
             if (!currentGun.gundata.isReloading)
             {
                 StartCoroutine(ReloadAndSyncAmmo());
@@ -118,7 +119,7 @@ public class WeaponController : MonoBehaviour
         //총알 구조가 바뀔때마다 호출해야하므로 start()에서 쓸 수 없기에 따로 메소드로 빼놓습니다.
 
         // 기본 탄환의 종류를 지정하는 배열. 
-        // 0: x, 1: 기본, 2: 관통, 3: x, 4: 치유, 5: 약점
+        // 0: x, 1: 기본, 2: 관통, 3: 치유, 4: 약점, 5: 장전
         // 나중에 휴식을 할 때, 바꿀수 있어야함
         for (int i = 6; i >= 1; i--) // 기본 탄환 6개.
         {

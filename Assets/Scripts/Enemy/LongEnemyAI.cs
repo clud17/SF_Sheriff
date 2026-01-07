@@ -12,6 +12,7 @@ public class LongEnemyAI : EnemyAI
 
         HP = GetComponent<Health>();
         HP.maxHealth = 15.0f; //최대 체력 설정
+        HP.currentEnemyHealth = HP.maxHealth; // 현재 체력 초기화
 
         detectionRange = 15.0f;
         attackRange = 15.0f;

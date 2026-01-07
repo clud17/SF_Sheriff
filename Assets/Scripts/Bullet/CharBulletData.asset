@@ -16,7 +16,7 @@ MonoBehaviour:
   damage: 20
   healsOnHit: 0
   lifetime: 2
-  tracerColor: {r: 0, g: 0, b: 0, a: 0}
+  tracerColor: {r: 0, g: 0.94594455, b: 1, a: 0}
   tracerWidth: 0.2
   tracerPrefab: {fileID: 6902860458574976773, guid: cc8b392653fcd6b46b008b246e0fcce5, type: 3}
   bulletId: 0

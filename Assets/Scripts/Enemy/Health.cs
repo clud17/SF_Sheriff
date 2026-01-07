@@ -2,16 +2,17 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    public float maxHealth = 100f;
+    public float maxHealth;
     public float currentEnemyHealth;
     // 약점 상태 플래그
-    private bool weakness = false;
+    protected bool weakness;
     // 임시 데미지 저장 변수, 약점탄을 맞췄을 때, 데미지 1.5배 적용하기 위함
-    private float weaknessdamage;
+    protected float weaknessdamage;
 
-    void Awake() => currentEnemyHealth = maxHealth;
-
-    public void ApplyDamage(float damage)
+    protected virtual void Awake(){
+        weakness = false;
+    }
+    public virtual void ApplyDamage(float damage)
     {
         // 약점탄이 적중하면 데미지 1.5배 적용
         if (weakness) {

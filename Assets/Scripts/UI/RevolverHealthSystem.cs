@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 public class RevolverHealthSystem : MonoBehaviour
 {
     [Header("체력 설정")]
@@ -128,8 +129,6 @@ public class RevolverHealthSystem : MonoBehaviour
         ResetGame();
         SceneManager.LoadScene(savePoint.Item1);
         GetComponent<PlayerMove>().gameObject.transform.position = savePoint.Item2;
-        
-
     }
 
     // 사망 후 게임 초기화
@@ -192,6 +191,18 @@ public class RevolverHealthSystem : MonoBehaviour
         }
         Debug.LogWarning("모든 총알이 발사되었거나 막혀있습니다.");
     }
+    public void AllFire()
+    {
+        for (int i = maxBullets - 1; i >= 0; i--)
+        {
+            if (!bulletBlockedStatus[i] && !bulletFiredStatus[i])
+            {
+                bulletFiredStatus[i] = true;
+                
+            }
+        }
+        UpdateUI();
+    }
 
     public void ResetFiredBullets()
     {
@@ -204,7 +215,6 @@ public class RevolverHealthSystem : MonoBehaviour
         }
         UpdateUI();
     }
-
     void UpdateUI()
     {
         for (int i = 0; i < maxBullets; i++)
@@ -265,16 +275,27 @@ public class RevolverHealthSystem : MonoBehaviour
         //SpriteRenderer. 대신에 SpriteLibrary.무언가를 써서 원래 했던 기능을 구현해야 하는데, 일단 나중에 알아보겠습니다.
         //251113 이용진
         int countTime = 0;
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
         while (countTime < 10)
         {
-            if (countTime % 2 == 0) playerSprite.color = new Color(1f, 1f, 1f, 0.3f);
-            else playerSprite.color = new Color(1f, 1f, 1f, 0.7f);
-
+            foreach (var r in renderers)
+            {
+                if (countTime % 2 == 0)
+                {
+                    r.color = new Color(1f, 1f, 1f, 0.3f); // 투명도 적용
+                }
+                else
+                {
+                    r.color = new Color(1f, 1f, 1f, 0.7f); // 투명도 적용
+                }
+            }
             yield return new WaitForSeconds(0.2f);
-
             countTime++;
         }
-        playerSprite.color = new Color(1f, 1f, 1f, 1f);
+        foreach (var r in renderers)
+        {
+            r.color = new Color(1f, 1f, 1f, 1f);
+        }
 
         isInvincible = false; // 무적 상태 해제
         

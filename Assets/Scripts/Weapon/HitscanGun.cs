@@ -40,6 +40,7 @@ public class HitScanGun : BaseGun
         RaycastHit2D[] hit = Physics2D.RaycastAll(tip.position, direction, 30f);        // RaycastAll을 사용하여 여러 충돌체를 감지
         
         BulletBase now = WC.myBulletObj[gundata.currentAmmo].GetComponent<BulletBase>();
+        now.SetGun(this); // 총알에 총 정보 전달
         int i=0;
         // 이제 안전하게 배열에 접근 가능
         for (i = 0; i < hit.Length; i++)

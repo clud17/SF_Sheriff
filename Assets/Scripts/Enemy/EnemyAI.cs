@@ -94,7 +94,7 @@ public class EnemyAI : MonoBehaviour
         isAttacking = true; // 공격 시작
         EnemyAnimator.SetBool("isAttacking", true);
         
-        Debug.Log($"{attackCycle}초 후 공격");
+        //Debug.Log($"{attackCycle}초 후 공격");
         yield return new WaitForSeconds(attackCycle); // 공격 쿨타임 대기
         EnemyAnimator.SetBool("isAttacking", false);
         isAttacking = false; // 공격 종료

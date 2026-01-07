@@ -17,6 +17,9 @@ public struct Data
     public int currentAmmo;  // 현재 남은 탄약의 갯수
 
     public int gunmode; // 총 (0:히트스캔, 1:투사체)
+
+    // 장전탄을 위한 플래그 추가
+    public bool isReloadBullet;
 }
 
 
@@ -31,6 +34,7 @@ public abstract class BaseGun : MonoBehaviour
         gundata.isReloading = false; // 재장전 중인지 아닌지
         gundata.maxHP = 6; // 최대 체력
         gundata.currentHP = gundata.maxHP; // 현재 체력을 최대 체력으로 초기화
+        gundata.isReloadBullet = false; // 장전탄 적중 플래그 초기화
         // gundata.currentAmmo는 WeaponController에서 RevolverHealthSystem을 통해 초기화/관리됩니다.
         // g250731: BaseGun 내부에서 currentAmmo를 초기화하는 대신, WeaponController가 관리하도록 합니다.
         // gundata.currentAmmo = gundata.currentHP; 
@@ -42,8 +46,19 @@ public abstract class BaseGun : MonoBehaviour
     {
         gundata.isReloading = true;
         Debug.Log("장전중..");
-        yield return new WaitForSeconds(gundata.AmmoreloadTime);
-        Debug.Log("장전 완료");
+
+        if (gundata.isReloadBullet) // ReloadBullet이 적군에게 맞았으면
+        {
+            yield return new WaitForSeconds(gundata.AmmoreloadTime * 0.25f);
+            gundata.isReloadBullet = false; // ReloadBullet.cs에서 플래그 변경한 것을 초기화
+            Debug.Log("특수 장전 완료");
+        }
+        else // 일반 재장전
+        {
+            yield return new WaitForSeconds(gundata.AmmoreloadTime);
+            Debug.Log("장전 완료");
+        }
+
 
         // g250731: 현재 탄약 수(currentAmmo)는 RevolverHealthSystem에서 가져온 값으로
         // WeaponController에서 업데이트하도록 합니다. BaseGun은 재장전 '동작'만 수행합니다.
@@ -51,4 +66,5 @@ public abstract class BaseGun : MonoBehaviour
 
         gundata.isReloading = false;
     }
+
 }

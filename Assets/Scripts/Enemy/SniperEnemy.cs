@@ -15,6 +15,7 @@ public class SniperEnemy : EnemyAI
 
         HP = GetComponent<Health>();
         HP.maxHealth = 5.0f; //최대 체력 설정
+        HP.currentEnemyHealth = HP.maxHealth; // 현재 체력 초기화
 
         detectionRange = 30.0f;
         attackRange = 30.0f;

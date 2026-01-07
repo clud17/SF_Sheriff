@@ -13,6 +13,7 @@ public abstract class BulletBase : MonoBehaviour
     public Vector2 moveDirection;//방향
     protected Rigidbody2D rb;
     protected RevolverHealthSystem H_System; // 체력 시스템 참조
+    protected BaseGun B_Gun; // 총기 참조
 
     protected string bulletName;
     float damage;
@@ -46,6 +47,12 @@ public abstract class BulletBase : MonoBehaviour
         tracerPrefab = bulletData.tracerPrefab;
         icon = bulletData.icon;
         H_System = FindObjectOfType<RevolverHealthSystem>(); // 체력 시스템 참조
+        
+    }
+    // basegun의 정보를 가져오기 위해서 SetGun을 통해 총알에 총을 연결해줘야함
+    public virtual void SetGun(BaseGun gun) // basegun 정보 설정
+    {
+        B_Gun = gun;
     }
 
     public int gunmode; // 총 모드 (0: hitscan, 1: projectile)
@@ -68,6 +75,12 @@ public abstract class BulletBase : MonoBehaviour
                 hitinfo.collider.GetComponent<Health>().ApplyDamage(damage); // 적 체력에 데미지 적용
                 Debug.Log("적에게 데미지를 줌(히트스캔)");
                 
+                break;
+            case "Boss":
+                setIsHit(true);
+                hitinfo.collider.GetComponent<BossHealth>().ApplyDamage(damage); // 보스 체력에 데미지 적용
+                Debug.Log("보스에게 데미지를 줌(히트스캔)");
+
                 break;
             case "Switch":
                 Debug.Log("오브젝트 가동됨");

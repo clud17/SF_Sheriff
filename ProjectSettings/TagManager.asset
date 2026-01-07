@@ -11,6 +11,7 @@ TagManager:
   - Spike
   - EnemyAttack
   - MainUI
+  - Platform
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - Gate
   - EnemyAttack
   - Player
-  - 
+  - Platform
   - 
   - 
   - 

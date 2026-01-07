@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 using UnityEngine.XR;
@@ -16,8 +17,6 @@ public class PlayerMove : MonoBehaviour
     private Collider2D col;
     private Rigidbody2D rb;
     private Animator anim;
-    private SpriteRenderer sprend;
-    private SpriteLibrary spLib;
 
     private bool isJumping = false;
     private float jumpTimeCounter = 0f;
@@ -45,8 +44,6 @@ public class PlayerMove : MonoBehaviour
         moveSpeed = 6.4f; // 이속
         jumpSpeed = 17.5f; // 점프높이
         maxJumpTime = 0.1f; // 최대점프시간
-        sprend = GetComponent<SpriteRenderer>();
-        spLib = GetComponent<SpriteLibrary>();
     }
 
     // Update is called once per frame
@@ -56,6 +53,7 @@ public class PlayerMove : MonoBehaviour
         {
             HandleMovement();
             HandleJump();
+            HandlePlatform();
             //...
         }
         HandleDashTimer(); // 대시타이머는 언제든지 흘러감
@@ -66,11 +64,17 @@ public class PlayerMove : MonoBehaviour
         float moveX = Input.GetAxisRaw("Horizontal");
         if (moveX < 0) // 좌측 이동
         {
-            //sprend.transform.localScale = new Vector3(-1f, 1f, 1f); // 좌측 이동시 스프라이트 반전
+            transform.localScale = new Vector3(-0.55f, 0.55f, 0.55f);
+            anim.SetBool("isMoving", true);
         }
         else if (moveX > 0) // 우측 이동
         {
-            //sprend.transform.localScale = new Vector3(1f, 1f, 1f); // 우측 이동시 스프라이트 원래대로
+            transform.localScale = new Vector3(0.55f, 0.55f, 0.55f);
+            anim.SetBool("isMoving", true);
+        }
+        else
+        {
+            anim.SetBool("isMoving", false);
         }
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown && IsGrounded())
@@ -135,6 +139,27 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    /*---------플레이어가 S키 누르면 플랫폼 내려가는 거 구현하는 코드입니다.-------*/
+    private void HandlePlatform()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Vector2 feetPoint = new Vector2(col.bounds.center.x, col.bounds.min.y);
+            RaycastHit2D hit = Physics2D.Raycast(feetPoint, Vector2.down, 0.2f, LayerMask.GetMask("Ground"));
+            if (hit.collider != null && hit.collider.CompareTag("Platform"))
+            {
+                StartCoroutine(DisableCollisionTemporarily(hit.collider));
+            }
+        }
+    }
+    private System.Collections.IEnumerator DisableCollisionTemporarily(Collider2D platformCol)
+    {
+        Physics2D.IgnoreCollision(col, platformCol, true);
+        yield return new WaitForSeconds(0.9f); // 0.9초 동안 충돌 무시
+        Physics2D.IgnoreCollision(col, platformCol, false);
+
+    }
+    /*----------------*/
     private bool IsGrounded()
     {
         float offsetY = -(col.bounds.extents.y + 0.1f); // 발끝에서 살짝 아래

@@ -19,5 +19,5 @@ MonoBehaviour:
   tracerColor: {r: 0, g: 1, b: 0, a: 0}
   tracerWidth: 0.1
   tracerPrefab: {fileID: 6902860458574976773, guid: cc8b392653fcd6b46b008b246e0fcce5, type: 3}
-  bulletId: 2
+  bulletId: 3
   icon: {fileID: 21300000, guid: 6f94a715a58e81341b838de37e06cee4, type: 3}
