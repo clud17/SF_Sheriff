@@ -8,7 +8,7 @@ public class HealingBullet : BulletBase
         if (base.getIsHit() && H_System != null)
         {
             //임시로 체력회복 구현
-            H_System.Heal(10);  // 일단 한칸 증가하게
+            H_System.Heal(1);  // 일단 한칸 증가하게
 
             //base.bulletData.healsOnHit 만큼 실드를 회복하면.
             base.setIsHit(false); // 초기화

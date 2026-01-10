@@ -27,7 +27,8 @@ public class SniperEnemy : EnemyAI
         isAttacking = false; // 공격 중인지 여부 초기화
         knockbackRange = 7.0f; // 넉백 거리 설정
 
-        Enemytip = transform.Find("EnemySniperGun/tip"); // 총구 위치 설정
+        //Enemytip = transform.Find("body/bone_body/arm_upper_R/bone_arm_upper_R/arm_lower_R/bone_arm_lower_R/weapon/bone_weapon/tip");
+
     }
     protected override IEnumerator EnemyAttack()
     {

@@ -11,7 +11,7 @@ public class PlayerStare : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        retouchAngle = new float[] {0,90,0,0};
+        retouchAngle = new float[] {0,90};
     }
     void LateUpdate()
     {
@@ -26,7 +26,7 @@ public class PlayerStare : MonoBehaviour
             transform.localScale = new Vector3(0.55f, 0.55f, 0.55f);  // 우측 정상
 
         // 각 파츠 회전 처리
-        for (int i = 0; i < parts.Length; i++)
+        for (int i = 0; i < retouchAngle.Length; i++)
         {
             Vector3 dir = mouseWorldPos - parts[i].position;
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;

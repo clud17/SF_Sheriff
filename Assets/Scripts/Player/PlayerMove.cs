@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.U2D.Animation;
 using UnityEngine.XR;
 
@@ -31,6 +32,7 @@ public class PlayerMove : MonoBehaviour
     /*────────────────────────────*/
 
     public bool isKnockback = false; // 넉백 상태 플래그
+    private bool canMove = true; // 움직임 가능 여부 플래그 ex) 기절당했을 때
 
     void Start()
     {
@@ -49,6 +51,9 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // 보스에게 기절 당했을 때, 움직임을 제한하기 위해 사용
+        if (!canMove) return;
+
         if (!isKnockback) // 넉백중이 아닐때만 이동및 대시 점프 구현
         {
             HandleMovement();
@@ -129,7 +134,7 @@ public class PlayerMove : MonoBehaviour
                 isJumping = false;
             }
         }
-        else if (Input.GetKeyUp(KeyCode.Space)) // 스페이스에서 키를 떼면
+        if (Input.GetKeyUp(KeyCode.Space)) // 스페이스에서 키를 떼면
         {
             if (rb.linearVelocity.y > 0)
             {
@@ -192,7 +197,6 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-
     // 외부에서 넉백 시작할 때 호출
     public void ApplyKnockback(Vector2 force)
     {
@@ -200,5 +204,27 @@ public class PlayerMove : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(force, ForceMode2D.Impulse);       // 넉백 구현
         Debug.Log("넉백 적용 됨");
+    }
+
+    public void FreezeMovement(float seconds)
+    {
+        StartCoroutine(Co_FreezeMovement(seconds));
+    }
+
+    private IEnumerator Co_FreezeMovement(float seconds)
+    {
+        canMove = false;
+
+        isDashing = false;
+        anim.SetBool("isDashing",false);
+        anim.SetBool("isMoving", false);
+        dashTimer = 0f;
+
+        rb.linearVelocity = Vector2.zero;
+        
+        yield return new WaitForSeconds(seconds);
+
+        canMove = true;
+
     }
 }

@@ -29,7 +29,7 @@ public class EnemyAI : MonoBehaviour
     {
         Init(); // 초기화 메소드 호출
         EnemyAnimator = GetComponent<Animator>();
-        Enemysprend = GetComponent<SpriteRenderer>();
+        //Enemysprend = GetComponent<SpriteRenderer>();
     }
 
     protected virtual void Update()
@@ -47,17 +47,20 @@ public class EnemyAI : MonoBehaviour
         if (hit.collider != null && hit.collider.gameObject.CompareTag("Player")) // null이 아니거나 플레이어 태그이면 감지
         {
             isPlayerDetected = true;
+            EnemyAnimator.SetBool("isDetecting", true);
         }
         else
         {
             isPlayerDetected = false;
+            EnemyAnimator.SetBool("isDetecting", false);
             StopMovement();
         }
 
-        //플레이어를 탐지했으면 행동 시작
+        //플레이어를 탐지했으면 행동 시작ewq
         if (isPlayerDetected)
         {
-            Enemysprend.transform.localScale = new Vector3(player.transform.position.x < transform.position.x ? 1f : -1f, 1f, 1f);
+            //Enemysprend.transform.localScale = new Vector3(player.transform.position.x < transform.position.x ? 1f : -1f, 1f, 1f);
+            transform.localScale = new Vector3(player.transform.position.x < transform.position.x ? -1f : 1f, 1f, 1f);
 
             //공격 범위보다 멀면 이동
             if (distanceToPlayer > attackRange && isAttacking == false)
@@ -79,6 +82,7 @@ public class EnemyAI : MonoBehaviour
 
     protected virtual void MoveTowardsPlayer()  // why virtual? => 날아다니는 몹은 이동 방식이 다르므로 
     {                                           // 오버라이드를 사용함
+
         Vector2 direction = (player.position - transform.position).normalized;
         direction.y = 0f;
         direction = direction.normalized;

@@ -14,21 +14,54 @@ EditorBuildSettings:
   - enabled: 1
     path: "Assets/Scenes/\uBFE1\uBFE1.unity"
     guid: 018a81a077a698a4e93323eced800204
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Room1.unity
     guid: 7dd02f0ef32ebd249949b8416d19da42
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Room2.unity
     guid: e9b091586eb892043a0180d1a6bbfaf6
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Room3.unity
     guid: da81dab5a87fa5b409ed279fc6a7e514
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Room6.unity
     guid: 5daa3c1fef0071d49be57c3bd16982a8
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Room7.unity
     guid: e064a53fcdc10574897bbcc1cb19711f
+  - enabled: 1
+    path: Assets/Scenes/Bridge.unity
+    guid: ea098373c66ad9648a28e599baf1206b
+  - enabled: 1
+    path: Assets/Scenes/Boss_room.unity
+    guid: 7758a39a9531bea4db791106117fa31e
+  - enabled: 1
+    path: Assets/Scenes/Exit.unity
+    guid: 12a0765fcf7c3ec49883720cafbd4488
+  - enabled: 1
+    path: Assets/Scenes/Garbage_dump.unity
+    guid: 01a04a573f9fbd040bdb29f87091df2b
+  - enabled: 1
+    path: Assets/Scenes/Left_corrider.unity
+    guid: 7eaff8a8414e1b84396932622ee76088
+  - enabled: 1
+    path: Assets/Scenes/Mechanical_Room.unity
+    guid: 28d514080ba94774683c08007b2a6df4
+  - enabled: 1
+    path: Assets/Scenes/Prison.unity
+    guid: da559cf283643574e9110c2df180be93
+  - enabled: 1
+    path: Assets/Scenes/Right_corrider.unity
+    guid: 52f442f8f4198ac42921f46352ca9151
+  - enabled: 1
+    path: Assets/Scenes/Second_floor.unity
+    guid: aa303fb207e89024d80da2274980cbd5
+  - enabled: 1
+    path: Assets/Scenes/Small_room.unity
+    guid: 6dd3b7ffcf1851549834c71b067becb3
+  - enabled: 1
+    path: Assets/Scenes/Third_floor.unity
+    guid: 4d633c197d066cf459b7f7a4fb403720
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 1

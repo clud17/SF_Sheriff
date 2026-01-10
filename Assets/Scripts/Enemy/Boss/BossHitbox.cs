@@ -15,7 +15,6 @@ public class BossHitbox : MonoBehaviour
     // 한번 켠 동안 1회만 히트 처리를 위한 플래그
     private bool hasHitThisActive = false;
 
-
     private void Awake()
     {
         if (hitboxCol == null) hitboxCol = GetComponent<Collider2D>();

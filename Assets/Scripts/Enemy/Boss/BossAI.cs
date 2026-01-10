@@ -49,15 +49,6 @@ public class BossAI : MonoBehaviour
         }
 
         FacePlayer();
-
-        if (distanceToPlayer > attackRange)
-        {
-            MoveTowardsPlayer();
-        }
-        else
-        {
-            StopMovement();
-        }
     }
 
 
