@@ -21,7 +21,8 @@ public class MiddleBoss1AI : BossAI
     RevolverHealthSystem revolverHealthSystem;
     private BossHealth bossHealth;
     private Dictionary<AttackType, bool> patternEnabled; // 공격 패턴 활성화 상태 저장용 딕셔너리
-    
+    private SpriteRenderer spriteRenderer;
+
     // 손 모양 변경용 필드 - SpriteResolver - 2페이즈 변환 시 검에서 훅으로 변경
     [SerializeField] private SpriteResolver handResolver;
     private string handCategory = "hand_R";
@@ -61,9 +62,10 @@ public class MiddleBoss1AI : BossAI
         player = GameObject.FindGameObjectWithTag("Player")?.transform; // 플레이어의 Transform을 찾음
         playerMove = player.GetComponent<PlayerMove>(); // 플레이어 이동 스크립트 가져오기(넉백을 위해 필요)
         revolverHealthSystem = player.GetComponent<RevolverHealthSystem>(); // 플레이어의 리볼버 체력 시스템 가져오기
-        
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
         bossHealth = GetComponent<BossHealth>();
-        bossHealth.maxHealth = 500.0f; //최대 체력 설정
+        bossHealth.maxHealth = 320.0f; //최대 체력 설정
         bossHealth.currentEnemyHealth = bossHealth.maxHealth; // 현재 체력 초기화
         // 기본 스탯 설정
         detectionRange = 25.0f;
@@ -246,8 +248,9 @@ public class MiddleBoss1AI : BossAI
 
             approachTimer += Time.deltaTime;
 
-            if (actionLock)
+            while (actionLock)
             {
+                StopMovement();
                 yield return null;
                 continue;
             }
@@ -527,9 +530,10 @@ public class MiddleBoss1AI : BossAI
     // 플레이어가 보스 앞에 있는지 확인하는 메서드
     private bool IsPlayerInFront()
     {
-        // 네가 flip 방향/보는 방향 기준으로 구현
-        // 임시로 true
-        return true;
+        float dir = spriteRenderer.flipX ? -1f : 1f; // 보스가 보는 방향
+        float dx = player.position.x - transform.position.x;
+
+        return dx * dir > 0f;
     }
     // 플레이어 위치로 점프하는 코루틴
     private IEnumerator JumpToPlayer(float windup, float duration, float arcHeight)
@@ -587,24 +591,29 @@ public class MiddleBoss1AI : BossAI
         // 1차 데미지
         revolverHealthSystem.TakeDamage(1);
 
-        // 기절(이동 제한) - PlayerMove에 FreezeMovement가 있어야 함
-        playerMove.FreezeMovement(1.2f);
+        // 기절(이동 제한) - PlayerMove에 FreezeMovement가 있음
+        float pullSpeed = 12f;
 
+        playerMove.SetExternalControl(true); // player 움직임 제한 on
         // 끌려오기
-        yield return StartCoroutine(Co_PullPlayerToBoss(1.0f, 12f)); // 1초동안 12의 속도로 끌려옴
-
-        // // 2차 데미지  튕김 - 아직 하지마
-        // revolverHealthSystem.TakeDamage(1);
-        // float knockDir = (player.position.x < transform.position.x) ? -1f : 1f;
-        // playerMove.ApplyKnockback(new Vector2(knockDir * 6f, 4f));
+        yield return StartCoroutine(Co_PullPlayerToBoss(pullSpeed)); // 12의 속도로 끌려옴
+        playerMove.SetExternalControl(false); // player 움직임 제한 off
     }
     // 플레이어 끌기
-    private IEnumerator Co_PullPlayerToBoss(float duration, float speed)
+    private IEnumerator Co_PullPlayerToBoss(float speed)
     {
+        bool attacked = false;
         float t = 0f;
 
         while (Mathf.Abs(transform.position.x - player.position.x) > 1.0f)
         {
+            if (!attacked && Mathf.Abs(transform.position.x - player.position.x) < 2.0f)
+            {
+                attacked = true;
+                EnemyAnimator.SetTrigger("BasicAttack");
+                yield return new WaitForSeconds(0.5f);
+            }
+
             t += Time.deltaTime;
 
             Vector3 target = transform.position;

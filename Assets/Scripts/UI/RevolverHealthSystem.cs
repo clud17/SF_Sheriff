@@ -276,7 +276,7 @@ public class RevolverHealthSystem : MonoBehaviour
         //251113 이용진
         int countTime = 0;
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
-        while (countTime < 10)
+        while (countTime < 5)
         {
             foreach (var r in renderers)
             {

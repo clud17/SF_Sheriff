@@ -33,6 +33,7 @@ public class PlayerMove : MonoBehaviour
 
     public bool isKnockback = false; // 넉백 상태 플래그
     private bool canMove = true; // 움직임 가능 여부 플래그 ex) 기절당했을 때
+    private bool isExternallyControlled = false; // 외부에서 움직임을 통제하는지 확인하는 플래그
 
     void Start()
     {
@@ -52,7 +53,7 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
         // 보스에게 기절 당했을 때, 움직임을 제한하기 위해 사용
-        if (!canMove) return;
+        if (!canMove || isExternallyControlled) return;
 
         if (!isKnockback) // 넉백중이 아닐때만 이동및 대시 점프 구현
         {
@@ -205,26 +206,29 @@ public class PlayerMove : MonoBehaviour
         rb.AddForce(force, ForceMode2D.Impulse);       // 넉백 구현
         Debug.Log("넉백 적용 됨");
     }
-
-    public void FreezeMovement(float seconds)
+    
+    // 외부에서 플레이어의 움직임을 제한할 때 쓰는 메소드
+    public void SetExternalControl(bool on)
     {
-        StartCoroutine(Co_FreezeMovement(seconds));
-    }
+        isExternallyControlled = on;
 
-    private IEnumerator Co_FreezeMovement(float seconds)
-    {
-        canMove = false;
+        if (on)
+        {
+            canMove = false;
 
-        isDashing = false;
-        anim.SetBool("isDashing",false);
-        anim.SetBool("isMoving", false);
-        dashTimer = 0f;
+            // 상태 정리(대시/이동 애니메이션 포함)
+            isDashing = false;
+            anim.SetBool("isDashing", false);
+            anim.SetBool("isMoving", false);
+            dashTimer = 0f;
 
-        rb.linearVelocity = Vector2.zero;
-        
-        yield return new WaitForSeconds(seconds);
-
-        canMove = true;
-
+            // 물리 정리
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+        else
+        {
+            canMove = true;
+        }
     }
 }
