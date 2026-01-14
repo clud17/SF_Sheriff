@@ -24,7 +24,7 @@ public class LongEnemyAI : EnemyAI
         isAttacking = false; // 공격 중인지 여부 초기화
         knockbackRange = 2.0f; // 넉백 거리 설정
 
-        Enemytip = transform.Find("EnemyGun/tip"); // 총구 위치 설정
+        //Enemytip = transform.Find("EnemyGun/tip"); // 총구 위치 설정
     }
     protected override IEnumerator EnemyAttack()
     {

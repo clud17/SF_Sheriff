@@ -1,14 +1,16 @@
 using System.Collections;
 using System.ComponentModel.Design;
 //using UnityEditor.Experimental.GraphView;
+
 using UnityEngine;
 /// <summary>
 /// 적 AI의 기본 클래스. 모든 적은 이 클래스를 상속받음
 /// </summary>
+[RequireComponent(typeof(Animator))]
 public class EnemyAI : MonoBehaviour
 {
     protected Transform player;
-    protected float detectionRange;
+    [SerializeField] protected float detectionRange;
     public float attackRange;
     protected float moveSpeed;
 
@@ -19,16 +21,18 @@ public class EnemyAI : MonoBehaviour
 
     protected bool isPlayerDetected;
     
-    protected Animator EnemyAnimator;
+    [SerializeField] protected Animator EnemyAnimator;
     protected Health HP;
     private SpriteRenderer Enemysprend;
     protected virtual void Init() // 자식이 호출하는 메소드
     {}
 
+    
     void Start()
     {
+        Debug.Log("EnemyAi.Start");
         Init(); // 초기화 메소드 호출
-        EnemyAnimator = GetComponent<Animator>();
+        //EnemyAnimator = GetComponent<Animator>();
         //Enemysprend = GetComponent<SpriteRenderer>();
     }
 
@@ -43,7 +47,6 @@ public class EnemyAI : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, detectionRange, mask);  // 등록된 레이어만 감지하도록
 
         Debug.DrawRay(transform.position, dir * detectionRange, Color.green);   // 디버그용 레이 시각화(없애도 됨)
-
         if (hit.collider != null && hit.collider.gameObject.CompareTag("Player")) // null이 아니거나 플레이어 태그이면 감지
         {
             isPlayerDetected = true;

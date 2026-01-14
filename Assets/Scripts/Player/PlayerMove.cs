@@ -19,7 +19,7 @@ public class PlayerMove : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
 
-    private bool isJumping = false;
+    [SerializeField] private bool isJumping = false;
     private float jumpTimeCounter = 0f;
 
     /*─────대시기능 구현 필드────────*/
@@ -168,13 +168,22 @@ public class PlayerMove : MonoBehaviour
     /*----------------*/
     private bool IsGrounded()
     {
-        float offsetY = -(col.bounds.extents.y + 0.1f); // 발끝에서 살짝 아래
-        Vector2 boxSize = new Vector2(col.bounds.size.x, 0.2f); // 캐릭터 너비의 90%, 높이는 얇게
-        Vector2 checkPosition = (Vector2)transform.position + new Vector2(0f, offsetY);
+        // 발끝 위치 계산
+        float offsetY = -(col.bounds.extents.y + 0.1f);
+        Vector2 origin = (Vector2)transform.position;
+
+        // Ground 레이어만 감지하도록 LayerMask 설정
         LayerMask groundLayer = LayerMask.GetMask("Ground");
 
-        return Physics2D.OverlapBox(checkPosition, boxSize, 0f, groundLayer);
+        // 발끝에서 아래로 레이캐스트 쏘기
+        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, col.bounds.extents.y + 0.1f, groundLayer);
+
+        // 디버그용 레이 표시
+        Debug.DrawRay(origin, Vector2.down * (col.bounds.extents.y + 0.1f), Color.red);
+
+        return hit.collider != null;
     }
+
 
 
     // 땅에 닿으면 넉백 상태 해제

@@ -6,16 +6,18 @@ public class knife : MonoBehaviour
     private int damage;
     void Awake()
     {
-        knockbackRange = 0;
-        damage = 0;
+        knockbackRange = 5;
+        damage = 1;
         
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log(collision.gameObject.name +"@@@");
         if (collision.tag == "Player")
         {
+            Debug.Log("Player");
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             RevolverHealthSystem revolverHealthSystem = player.GetComponent<RevolverHealthSystem>();
 

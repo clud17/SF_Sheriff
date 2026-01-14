@@ -70,6 +70,8 @@ public class WeaponController : MonoBehaviour
         }
         //RevolverHealthSystem 연결을 위한 추가 코드 끝
 
+        if(currentGun.gundata.currentAmmo <= 0) StartCoroutine(ReloadAndSyncAmmo());
+
         if (Input.GetMouseButtonDown(0) && Time.time >= currentGun.gundata.nextFireTime)
         { //좌클릭 코드 구현
             // 체력연결용
@@ -89,7 +91,6 @@ public class WeaponController : MonoBehaviour
             Debug.Log($"{currentGun.gundata.currentAmmo}");
             currentGun.gundata.nextFireTime = Time.time + currentGun.gundata.fireRate;  // 발사 주기를 관리하기 위해
         }
-
         
         // 기존의 ReloadAmmo()와 ResetFiredBullets()를 분리하지 않고
         // 하나의 코루틴에서 순차적으로 처리하여 -1 오류를 방지

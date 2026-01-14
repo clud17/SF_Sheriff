@@ -65,7 +65,7 @@ public class MiddleBoss1AI : BossAI
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         bossHealth = GetComponent<BossHealth>();
-        bossHealth.maxHealth = 320.0f; //최대 체력 설정
+        bossHealth.maxHealth = 500.0f; //최대 체력 설정
         bossHealth.currentEnemyHealth = bossHealth.maxHealth; // 현재 체력 초기화
         // 기본 스탯 설정
         detectionRange = 25.0f;
