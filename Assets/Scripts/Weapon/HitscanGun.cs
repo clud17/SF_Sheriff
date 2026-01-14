@@ -59,6 +59,7 @@ public class HitScanGun : BaseGun
         
         DrawTracer(now, tip.position, direction, hit.Length==i?30f:hit[i].distance);
 
+        // 유니티 Scene에서만 보이는 디버그용 라인 (총알 궤적X)
         Debug.DrawRay(tip.position, direction * 100f, Color.red, 1f);
     }
 
@@ -87,6 +88,7 @@ public class HitScanGun : BaseGun
         }
         DrawTracer(now, tip.position, direction, hit.Length==0?30f:hit[i].distance);
 
+        // 유니티 Scene에서만 보이는 디버그용 라인 (총알 궤적X)
         Debug.DrawRay(tip.position, direction * 100f, Color.blue, 1f);
     }
 
