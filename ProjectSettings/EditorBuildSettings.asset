@@ -6,12 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Garbage_dump.unity
+    guid: ec978213b545add40b18006e6b2b66a0
+  - enabled: 1
     path: Assets/Scenes/Room0.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainMenu.unity
     guid: 87e7fd925e3748f48bb5183788d02fc6
-  - enabled: 1
+  - enabled: 0
     path: "Assets/Scenes/\uBFE1\uBFE1.unity"
     guid: 018a81a077a698a4e93323eced800204
   - enabled: 0
@@ -31,16 +34,13 @@ EditorBuildSettings:
     guid: e064a53fcdc10574897bbcc1cb19711f
   - enabled: 1
     path: Assets/Scenes/Bridge.unity
-    guid: ea098373c66ad9648a28e599baf1206b
+    guid: 43c62d40296cec9408d70db3ae8e4737
   - enabled: 1
     path: Assets/Scenes/Boss_room.unity
     guid: 7758a39a9531bea4db791106117fa31e
   - enabled: 1
     path: Assets/Scenes/Exit.unity
     guid: 12a0765fcf7c3ec49883720cafbd4488
-  - enabled: 1
-    path: Assets/Scenes/Garbage_dump.unity
-    guid: 01a04a573f9fbd040bdb29f87091df2b
   - enabled: 1
     path: Assets/Scenes/Left_corrider.unity
     guid: 7eaff8a8414e1b84396932622ee76088
@@ -56,7 +56,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Second_floor.unity
     guid: aa303fb207e89024d80da2274980cbd5
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Small_room.unity
     guid: 6dd3b7ffcf1851549834c71b067becb3
   - enabled: 1

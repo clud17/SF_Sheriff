@@ -38,7 +38,7 @@ public class BossAI : MonoBehaviour
         if (player == null) return;
 
         float distanceToPlayer = GetDistanceToPlayer();
-
+        
         // 탐지 (간단 거리 기반. Raycast 탐지면 기존 로직 유지해도 됨)
         isPlayerDetected = distanceToPlayer <= detectionRange;
 

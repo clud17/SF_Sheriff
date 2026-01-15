@@ -11,11 +11,13 @@ public class BossHealth : Health
     // [추가설명] 페이즈가 바뀌었다는 사실을 BossAI가 알아야 하므로 이벤트를 사용
 
     private bool isInvicible; // 무적 상태 플래그 // 페이즈 변화 시 잠시 무적 상태로 만들기 위해 필요
+    private bool IsDeath;
 
     protected override void Awake(){
         base.Awake();
         Phase = 1;
         isInvicible = false;
+        IsDeath = false;
     }
 
     public override void ApplyDamage(float damage)
@@ -32,7 +34,10 @@ public class BossHealth : Health
             Debug.Log($"{gameObject.name} has entered phase 2!");
         }
 
-        // 추후 기절하는 로직 추가 해야함
+        if(currentEnemyHealth <= 0) {
+            IsDeath = true;
+            Debug.Log($"{IsDeath} 가 뭘까");
+        }
     }
 
     // AI가 페이즈를 확정할 때 호출하는 메서드
@@ -46,7 +51,10 @@ public class BossHealth : Health
     {
         isInvicible = value;
     }
-    
+    public bool GetIsDeath()
+    {
+        return IsDeath;
+    }
     void Die()
     {
         Debug.Log($"{gameObject.name} died!");

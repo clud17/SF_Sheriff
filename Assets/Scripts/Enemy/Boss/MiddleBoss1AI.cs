@@ -399,7 +399,8 @@ public class MiddleBoss1AI : BossAI
     {
         // 점프 공격 패턴 구현
         EnemyAnimator.SetTrigger("JumpAttack");
-        yield return StartCoroutine(JumpToPlayer(0.5f, 0.5f, 2.0f));
+        yield return StartCoroutine(JumpToPlayer(0.5f, 0.5f, 5.0f));
+        EnemyAnimator.SetTrigger("JumpAttackStop");
     }
     private IEnumerator pattern_DashAttack()
     {
@@ -463,10 +464,11 @@ public class MiddleBoss1AI : BossAI
         // 첫 도약 (선딜 0.5초)
         JumpHitPlayer = false;
         EnemyAnimator.SetTrigger("JumpAttack");
-        yield return StartCoroutine(JumpToPlayer(0.5f, 0.5f, 2.0f));
+        yield return StartCoroutine(JumpToPlayer(0.5f, 0.5f, 5.0f));
         if (JumpHitPlayer) // 플레이어를 맞췄으면 다음 점프로 넘어가지 않음
         {
             isTripleJumping = false;
+            EnemyAnimator.SetTrigger("JumpAttackStop");
             yield break; 
         }
         // 나머지 2회 도약 (선딜 0.3초)
@@ -474,7 +476,7 @@ public class MiddleBoss1AI : BossAI
         {
             JumpHitPlayer = false;
             EnemyAnimator.SetTrigger("JumpAttackFast");
-            yield return StartCoroutine(JumpToPlayer(0.3f, 0.5f, 2.0f));
+            yield return StartCoroutine(JumpToPlayer(0.4f, 0.5f, 5.0f));
             if (JumpHitPlayer) // 플레이어를 맞췄으면 다음 점프로 넘어가지 않음
             {
                 isTripleJumping = false;
@@ -482,6 +484,7 @@ public class MiddleBoss1AI : BossAI
             }
         }
         
+        EnemyAnimator.SetTrigger("JumpAttackStop");
         isTripleJumping = false;
     }
     private IEnumerator pattern_ChainHookAttack()

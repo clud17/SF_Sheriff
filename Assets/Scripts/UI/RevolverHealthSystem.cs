@@ -20,6 +20,7 @@ public class RevolverHealthSystem : MonoBehaviour
     [Header("게임 오버")]
     public GameObject gameOverPanel;
     public bool isInvincible; // 무적 상태 플래그
+    private bool isDead = false;
 
     // 기존 주석 유지: [Header("UI 연결")]
     [Header("UI 연결")]
@@ -34,7 +35,7 @@ public class RevolverHealthSystem : MonoBehaviour
     // 초기화: Awake에서 변수와 배열을 모두 초기화합니다.
     void Awake()
     {
-        savePoint = ("Room0", new Vector3(-5, -5, 0));
+        savePoint = ("Garbage_dump", new Vector3(-65, -6, 0));
         playerSprite = GetComponent<SpriteRenderer>();
         isInvincible = false;
 
@@ -126,9 +127,34 @@ public class RevolverHealthSystem : MonoBehaviour
 
 
         // 0914 추가 코드입니다. 플레이어 사망시 세이브포인트로 되돌아갑니다.
+        if (isDead) return;
+        isDead = true;
+
+        Debug.Log("게임 오버! 플레이어 사망!");
+        StartCoroutine(Respawn());
+    }
+
+    private IEnumerator Respawn()
+    {
+        // 죽음 연출 대기 (필요 없으면 0f)
+        yield return new WaitForSeconds(0.5f);
+
+        // 씬이 다르면 로드
+        if (SceneManager.GetActiveScene().name != savePoint.Item1)
+        {
+            SceneManager.LoadScene(savePoint.Item1);
+            yield return null; // 씬 로드 1프레임 대기
+        }
+
+        // 위치 이동
+        transform.position = savePoint.Item2;
+
+        // 상태 초기화
         ResetGame();
-        SceneManager.LoadScene(savePoint.Item1);
-        GetComponent<PlayerMove>().gameObject.transform.position = savePoint.Item2;
+        ResetFiredBullets();
+        isInvincible = false;
+
+        isDead = false;
     }
 
     // 사망 후 게임 초기화

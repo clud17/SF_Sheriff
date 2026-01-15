@@ -55,6 +55,7 @@ public class WeaponController : MonoBehaviour
     void Update()
     {
         if (currentGun.gundata.isReloading) return; // 재장전 중이면 아무것도 하지 않음
+        if (Time.timeScale <= 0f) return; // 시간이 멈출때 -> 인벤토리 열 때 멈춤
 
         //RevolverHealthSystem 연결
         // RevolverHealthSystem에서 현재 발사 가능한 총알 수를 가져와 업데이트

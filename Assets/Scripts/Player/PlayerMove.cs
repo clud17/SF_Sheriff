@@ -189,7 +189,8 @@ public class PlayerMove : MonoBehaviour
     // 땅에 닿으면 넉백 상태 해제
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground")) // 바닥만 인식
+        if (collision.gameObject.CompareTag("Ground") 
+        || collision.gameObject.CompareTag("Platform")) // 바닥만 인식
         {
             isKnockback = false;
         }
